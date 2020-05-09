@@ -70,7 +70,7 @@ export default (options: Options = {}): Plugin => {
     },
 
     async transform(code, id) {
-      if (filter(id)) {
+      if (!filter(id)) {
         return null
       }
 
