@@ -19,11 +19,23 @@ export type Options = {
 export default (options: Options = {}): Plugin => {
   let service: Service | undefined
 
+  const stopService = () => {
+    if (!options.watch && service) {
+      service.stop()
+      service = undefined
+    }
+  }
+
+  // The order is:
+  // buildStart -> resolveId -> transform -> buildEnd -> renderChunk -> generateBundle
+
   return {
     name: 'esbuild',
 
     async buildStart() {
-      service = await startService()
+      if (!service) {
+        service = await startService()
+      }
     },
 
     resolveId(importee, importer) {
@@ -74,6 +86,14 @@ export default (options: Options = {}): Plugin => {
       )
     },
 
+    
+    buildEnd(error) {
+      // Stop the service early if there's error
+      if (error) {
+        stopService()
+      }
+    },
+
     async renderChunk(code) {
       if (options.minify && service) {
         const result = await service.transform(code, {
@@ -93,10 +113,7 @@ export default (options: Options = {}): Plugin => {
     },
 
     generateBundle() {
-      if (!options.watch && service) {
-        service.stop()
-        service = undefined
-      }
+      stopService()
     },
   }
 }
