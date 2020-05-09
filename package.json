@@ -1,0 +1,20 @@
+{
+  "name": "rollup-plugin-esbuild",
+  "version": "1.0.0",
+  "main": "src/index.js",
+  "author": "EGOIST",
+  "license": "MIT",
+  "scripts": {
+    "example": "rollup -c example/rollup.config.js"
+  },
+  "files": [
+    "src"
+  ],
+  "devDependencies": {
+    "rollup": "^2.8.2",
+    "typescript": "^3.8.3"
+  },
+  "dependencies": {
+    "esbuild": "^0.2.9"
+  }
+}
