@@ -21,7 +21,7 @@ export type Options = {
 
 export default (options: Options = {}): Plugin => {
   const filter = createFilter(
-    options.include || /\.[jt]s$/,
+    options.include || /\.[jt]sx?$/,
     options.exclude || /node_modules/
   )
 

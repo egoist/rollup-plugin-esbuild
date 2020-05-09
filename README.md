@@ -19,7 +19,7 @@ export default {
   plugins: [
     esbuild({
       // All options are optional
-      include: /\.[jt]s$/, // default
+      include: /\.[jt]sx?$/, // default
       exclude: /node_modules/, // default
       watch: process.argv.includes('--watch'),
       minify: process.env.NODE_ENV === 'production',
