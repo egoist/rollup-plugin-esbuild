@@ -2,10 +2,13 @@ import { existsSync } from 'fs'
 import { extname, resolve, dirname } from 'path'
 import { Plugin, PluginContext } from 'rollup'
 import { startService, Loader, Service, Target, TransformResult } from 'esbuild'
+import { createFilter, FilterPattern } from '@rollup/pluginutils'
 
 const loaders: Loader[] = ['js', 'jsx', 'ts', 'tsx']
 
 export type Options = {
+  include?: FilterPattern
+  exclude?: FilterPattern
   watch?: boolean
   minify?: boolean
   target?: Target
@@ -17,6 +20,11 @@ export type Options = {
 }
 
 export default (options: Options = {}): Plugin => {
+  const filter = createFilter(
+    options.include || /\.[jt]s$/,
+    options.exclude || /node_modules/
+  )
+
   let service: Service | undefined
 
   const stopService = () => {
@@ -62,6 +70,10 @@ export default (options: Options = {}): Plugin => {
     },
 
     async transform(code, id) {
+      if (filter(id)) {
+        return null
+      }
+
       const loader = extname(id).slice(1) as Loader
 
       if (!loaders.includes(loader) || !service) {
@@ -86,7 +98,6 @@ export default (options: Options = {}): Plugin => {
       )
     },
 
-    
     buildEnd(error) {
       // Stop the service early if there's error
       if (error) {

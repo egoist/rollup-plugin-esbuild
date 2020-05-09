@@ -19,6 +19,8 @@ export default {
   plugins: [
     esbuild({
       // All options are optional
+      include: /\.[jt]s$/, // default
+      exclude: /node_modules/, // default
       watch: process.argv.includes('--watch'),
       minify: process.env.NODE_ENV === 'production',
       target: 'es2015' // default, or 'es20XX', 'esnext'
@@ -33,7 +35,7 @@ export default {
 }
 ```
 
-This plugin handles `.js` `.jsx` `.ts` `.tsx` for you.
+- `include` and `exclude` can be `String | RegExp | Array[...String|RegExp]`, when supplied it will override default values.
 
 ## License
 
