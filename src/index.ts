@@ -11,6 +11,9 @@ export type Options = {
   target?: Target
   jsxFactory?: string
   jsxFragment?: string
+  define?: {
+    [k: string]: string
+  }
 }
 
 export default (options: Options = {}): Plugin => {
@@ -58,14 +61,17 @@ export default (options: Options = {}): Plugin => {
         target: options.target || 'es2015',
         jsxFactory: options.jsxFactory,
         jsxFragment: options.jsxFragment,
+        define: options.define,
       })
 
       printWarnings(result, this)
 
-      return result.js && {
-        code: result.js,
-        map: result.jsSourceMap,
-      }
+      return (
+        result.js && {
+          code: result.js,
+          map: result.jsSourceMap,
+        }
+      )
     },
 
     async renderChunk(code) {
@@ -77,11 +83,11 @@ export default (options: Options = {}): Plugin => {
         })
         printWarnings(result, this)
         if (result.js) {
-					return {
-						code: result.js,
-						map: result.jsSourceMap,
-					}
-				}
+          return {
+            code: result.js,
+            map: result.jsSourceMap,
+          }
+        }
       }
       return null
     },

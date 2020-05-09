@@ -24,6 +24,10 @@ export default {
       target: 'es2015' // default, or 'es20XX', 'esnext'
       jsxFactory: 'React.createElement',
       jsxFragment: 'React.Fragment'
+      // Like @rollup/plugin-replace
+      define: {
+        __VERSION__: '"x.y.z"'
+      }
     }),
   ],
 }
