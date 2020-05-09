@@ -1,5 +1,5 @@
-const { rollup } = require('rollup')
-const esbuild = require('../src')
+import { rollup } from 'rollup'
+import esbuild from '../src'
 
 test('simple', async () => {
   const bundle = await rollup({

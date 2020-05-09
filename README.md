@@ -22,6 +22,8 @@ export default {
       watch: process.argv.includes('--watch'),
       minify: process.env.NODE_ENV === 'production',
       target: 'es2015' // default, or 'es20XX', 'esnext'
+      jsxFactory: 'React.createElement',
+      jsxFragment: 'React.Fragment'
     }),
   ],
 }
