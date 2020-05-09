@@ -1,6 +1,6 @@
 {
   "name": "rollup-plugin-esbuild",
-  "version": "1.0.0",
+  "version": "0.0.0-semantic-release",
   "main": "src/index.js",
   "author": "EGOIST",
   "license": "MIT",
