@@ -5,12 +5,16 @@
   "author": "EGOIST",
   "license": "MIT",
   "scripts": {
+    "test": "jest --env node",
     "example": "rollup -c example/rollup.config.js"
   },
   "files": [
     "src"
   ],
   "devDependencies": {
+    "@types/jest": "^25.2.1",
+    "jest": "^26.0.1",
+    "prettier": "^2.0.5",
     "rollup": "^2.8.2",
     "typescript": "^3.8.3"
   },
