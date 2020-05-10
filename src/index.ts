@@ -46,7 +46,7 @@ export default (options: Options = {}): Plugin => {
       }
     },
 
-    resolveId(importee, importer) {
+    resolveId(importee: string, importer: string | undefined) {
       if (importer && importee[0] === '.') {
         const resolved = resolve(
           importer ? dirname(importer) : process.cwd(),
@@ -63,7 +63,7 @@ export default (options: Options = {}): Plugin => {
       }
     },
 
-    async transform(code, id) {
+    async transform(code: string, id: string) {
       if (!filter(id)) {
         return null
       }
