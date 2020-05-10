@@ -52,20 +52,14 @@ export default (options: Options = {}): Plugin => {
           importer ? dirname(importer) : process.cwd(),
           importee
         )
-
         const exists = existsSync(resolved)
 
-        if (!exists && existsSync(`${resolved}.jsx`)) {
-          return `${resolved}.jsx`
-        }
-
-        if (!exists && existsSync(`${resolved}.ts`)) {
-          return `${resolved}.ts`
-        }
-
-        if (!exists && existsSync(`${resolved}.tsx`)) {
-          return `${resolved}.tsx`
-        }
+        for (const loader of loaders) {
+          const file = `${resolved}.${loader}`
+          if (!exists && existsSync(file)) {
+            return file
+          }  
+        }     
       }
     },
 
