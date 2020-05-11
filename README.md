@@ -45,6 +45,12 @@ There are serveral ways to generate declaration file:
 - Use [`rollup-plugin-dts`](https://github.com/Swatinem/rollup-plugin-dts) which generates and bundle `.d.ts`, no type checking so it's very fast.
 - Use [`api-extractor`](https://api-extractor.com/) by Microsoft, looks quite complex to me so I didn't try it, PR welcome to update this section.
 
+### Type Checking
+
+> How do I get type checking then? VS Code only shows type errors for opened files!
+
+You can enable type checking in testing, for example use [jest](https://jestjs.io/) with [ts-jest](https://github.com/kulshekhar/ts-jest) to run tests, here's an example [jest config file](./jest.config.js).
+
 ## License
 
 MIT &copy; [EGOIST (Kevin Titor)](https://github.com/sponsors/egoist)
