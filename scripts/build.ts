@@ -1,32 +1,34 @@
+import { builtinModules } from 'module'
 import { rollup } from 'rollup'
-import { clean } from 'aria-fs'
 
 import dts from 'rollup-plugin-dts'
-import esbuild from './src/index'
+import esbuild from '../src/index'
 
-(async function() {
-  const external = [ 'fs', 'path', 'esbuild', '@rollup/pluginutils' ]
+const pkg: { [k: string]: any } = require('../package.json')
+const deps = Object.keys(pkg.dependencies)
+
+;(async function () {
+  const external = [...deps, ...builtinModules]
 
   async function build() {
     const bundle = await rollup({
       input: './src/index.ts',
       external,
-      plugins: [ esbuild() ]
+      plugins: [esbuild()],
     })
 
     await bundle.write({ file: './dist/index.js', format: 'cjs' })
   }
-  
+
   async function createDtsFile() {
     const bundle = await rollup({
       input: './src/index.ts',
       external,
-      plugins: [ dts() ]
+      plugins: [dts()],
     })
 
     await bundle.write({ file: './dist/index.d.ts' })
   }
 
-  await clean('dist')
-  await Promise.all([ build(), createDtsFile() ])
+  await Promise.all([build(), createDtsFile()])
 })()
