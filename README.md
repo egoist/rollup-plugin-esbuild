@@ -37,6 +37,14 @@ export default {
 
 - `include` and `exclude` can be `String | RegExp | Array[...String|RegExp]`, when supplied it will override default values.
 
+### Declaration File
+
+There are serveral ways to generate declaration file:
+
+- Use `tsc` with `emitDeclarationOnly`, the slowest way but you get type checking, it doesn't bundle the `.d.ts` files.
+- Use [`rollup-plugin-dts`](https://github.com/Swatinem/rollup-plugin-dts) which generates and bundle `.d.ts`, no type checking so it's very fast.
+- Use [`api-extractor`](https://api-extractor.com/) by Microsoft, looks quite complex to me so I didn't try it, PR welcome to update this section.
+
 ## License
 
 MIT &copy; [EGOIST (Kevin Titor)](https://github.com/sponsors/egoist)
