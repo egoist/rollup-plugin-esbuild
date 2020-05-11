@@ -7,8 +7,8 @@
   "license": "MIT",
   "scripts": {
     "test": "jest",
-    "example": "rollup -c example/rollup.config.js",
-    "build": "tsc",
+    "example": "npm run build && rollup -c example/rollup.config.js",
+    "build": "ts-node scripts/build",
     "prepublishOnly": "npm run build"
   },
   "files": [
@@ -18,12 +18,14 @@
     "@types/jest": "^25.2.1",
     "jest": "^26.0.1",
     "prettier": "^2.0.5",
-    "rollup": "^2.8.2",
+    "rollup": "^2.9.0",
+    "rollup-plugin-dts": "^1.4.2",
     "ts-jest": "^25.5.1",
+    "ts-node": "^8.10.1",
     "typescript": "^3.8.3"
   },
   "dependencies": {
     "@rollup/pluginutils": "^3.0.10",
-    "esbuild": "^0.2.9"
+    "esbuild": "^0.2.11"
   }
 }
