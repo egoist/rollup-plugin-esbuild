@@ -63,10 +63,8 @@ export default (options: Options = {}): Plugin => {
 
         let file = resolveFile(resolved)
         if (file) return file
-        if (!file) {
-          if (existsSync(resolved) && statSync(resolved).isDirectory()) {
-            file = resolveFile(resolved, true)
-          }
+        if (!file && existsSync(resolved) && statSync(resolved).isDirectory()) {
+          file = resolveFile(resolved, true)
           if (file) return file
         }
       }
