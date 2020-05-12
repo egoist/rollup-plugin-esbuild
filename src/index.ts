@@ -1,5 +1,5 @@
-import { existsSync } from 'fs'
-import { extname, resolve, dirname } from 'path'
+import { existsSync, statSync } from 'fs'
+import { extname, resolve, dirname, join } from 'path'
 import { Plugin, PluginContext } from 'rollup'
 import { startService, Loader, Service, Target, TransformResult } from 'esbuild'
 import { createFilter, FilterPattern } from '@rollup/pluginutils'
@@ -37,6 +37,14 @@ export default (options: Options = {}): Plugin => {
   // The order is:
   // buildStart -> resolveId -> transform -> buildEnd -> renderChunk -> generateBundle
 
+  const resolveFile = (resolved: string, index: boolean = false) => {
+    for (const loader of loaders) {
+      const file = index ? join(resolved, `index.${loader}`): `${resolved}.${loader}`
+      if (existsSync(file)) return file
+    }
+    return null
+  }
+
   return {
     name: 'esbuild',
 
@@ -52,14 +60,15 @@ export default (options: Options = {}): Plugin => {
           importer ? dirname(importer) : process.cwd(),
           importee
         )
-        const exists = existsSync(resolved)
 
-        for (const loader of loaders) {
-          const file = `${resolved}.${loader}`
-          if (!exists && existsSync(file)) {
-            return file
-          }  
-        }     
+        let file = resolveFile(resolved)
+        if (file) return file
+        if (!file) {
+          if (existsSync(resolved) && statSync(resolved).isDirectory()) {
+            file = resolveFile(resolved, true)
+          }
+          if (file) return file
+        }
       }
     },
 
