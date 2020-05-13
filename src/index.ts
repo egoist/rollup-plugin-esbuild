@@ -1,5 +1,5 @@
 import { existsSync, statSync } from 'fs'
-import { extname, resolve, dirname, join } from 'path'
+import { extname, resolve, dirname, join, relative } from 'path'
 import { Plugin, PluginContext } from 'rollup'
 import { startService, Loader, Service, Target, TransformResult } from 'esbuild'
 import { createFilter, FilterPattern } from '@rollup/pluginutils'
@@ -39,7 +39,9 @@ export default (options: Options = {}): Plugin => {
 
   const resolveFile = (resolved: string, index: boolean = false) => {
     for (const loader of loaders) {
-      const file = index ? join(resolved, `index.${loader}`): `${resolved}.${loader}`
+      const file = index
+        ? join(resolved, `index.${loader}`)
+        : `${resolved}.${loader}`
       if (existsSync(file)) return file
     }
     return null
@@ -89,7 +91,7 @@ export default (options: Options = {}): Plugin => {
         define: options.define,
       })
 
-      printWarnings(result, this)
+      printWarnings(id, result, this)
 
       return (
         result.js && {
@@ -113,7 +115,6 @@ export default (options: Options = {}): Plugin => {
           target: 'esnext',
           minify: true,
         })
-        printWarnings(result, this)
         if (result.js) {
           return {
             code: result.js,
@@ -130,12 +131,18 @@ export default (options: Options = {}): Plugin => {
   }
 }
 
-function printWarnings(result: TransformResult, plugin: PluginContext) {
+function printWarnings(
+  id: string,
+  result: TransformResult,
+  plugin: PluginContext
+) {
   if (result.warnings) {
     for (const warning of result.warnings) {
       let message = `[esbuild]`
       if (warning.location) {
-        message += ` (${warning.location.file}:${warning.location.line}:${warning.location.column})`
+        message += ` (${relative(process.cwd(), id)}:${warning.location.line}:${
+          warning.location.column
+        })`
       }
       message += ` ${warning.text}`
       plugin.warn(message)
