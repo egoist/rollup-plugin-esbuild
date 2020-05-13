@@ -133,7 +133,12 @@ export default (options: Options = {}): Plugin => {
 function printWarnings(result: TransformResult, plugin: PluginContext) {
   if (result.warnings) {
     for (const warning of result.warnings) {
-      plugin.warn(`[esbuild] ${warning.location}\n${warning.text}`)
+      let message = `[esbuild]`
+      if (warning.location) {
+        message += ` (${warning.location.file}:${warning.location.line}:${warning.location.column})`
+      }
+      message += ` ${warning.text}`
+      plugin.warn(message)
     }
   }
 }
