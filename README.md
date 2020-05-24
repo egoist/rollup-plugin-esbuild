@@ -22,6 +22,7 @@ export default {
       include: /\.[jt]sx?$/, // default
       exclude: /node_modules/, // default
       watch: process.argv.includes('--watch'),
+      sourceMap: false, // defaults to true
       minify: process.env.NODE_ENV === 'production',
       target: 'es2015' // default, or 'es20XX', 'esnext'
       jsxFactory: 'React.createElement',
