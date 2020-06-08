@@ -27,7 +27,7 @@
     "typescript": "^3.9.3"
   },
   "dependencies": {
-    "@rollup/pluginutils": "^3.0.10",
+    "@rollup/pluginutils": "^3.1.0",
     "esbuild": "^0.3.9"
   }
 }
