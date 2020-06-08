@@ -24,7 +24,7 @@
     "rollup-plugin-dts": "^1.4.7",
     "ts-jest": "^25.5.1",
     "ts-node": "^8.10.2",
-    "typescript": "^3.9.3"
+    "typescript": "^3.9.5"
   },
   "dependencies": {
     "@rollup/pluginutils": "^3.1.0",
