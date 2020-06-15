@@ -7,7 +7,7 @@ import esbuild from '../src/index'
 const pkg: { [k: string]: any } = require('../package.json')
 const deps = Object.keys(pkg.dependencies)
 
-;(async function () {
+async function main() {
   const external = [...deps, ...builtinModules]
 
   async function build() {
@@ -31,4 +31,9 @@ const deps = Object.keys(pkg.dependencies)
   }
 
   await Promise.all([build(), createDtsFile()])
-})()
+}
+
+main().catch(err => {
+  console.error(err)
+  process.exit(1)
+})
