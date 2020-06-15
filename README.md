@@ -23,7 +23,7 @@ export default {
       exclude: /node_modules/, // default
       watch: process.argv.includes('--watch'),
       minify: process.env.NODE_ENV === 'production',
-      target: 'es2015' // default, or 'es20XX', 'esnext'
+      target: 'es2017' // default, or 'es20XX', 'esnext'
       jsxFactory: 'React.createElement',
       jsxFragment: 'React.Fragment'
       // Like @rollup/plugin-replace
