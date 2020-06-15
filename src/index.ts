@@ -96,7 +96,7 @@ export default (options: Options = {}): Plugin => {
       return (
         result.js && {
           code: result.js,
-          map: result.jsSourceMap,
+          map: result.jsSourceMap || null,
         }
       )
     },
@@ -118,7 +118,7 @@ export default (options: Options = {}): Plugin => {
         if (result.js) {
           return {
             code: result.js,
-            map: result.jsSourceMap,
+            map: result.jsSourceMap || null,
           }
         }
       }

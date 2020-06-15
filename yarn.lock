@@ -1224,10 +1224,10 @@ error-ex@^1.3.1:
   dependencies:
     is-arrayish "^0.2.1"
 
-esbuild@^0.4.11:
-  version "0.4.11"
-  resolved "https://registry.yarnpkg.com/esbuild/-/esbuild-0.4.11.tgz#087564ad07e0094035bd50b044136d17ebb083e2"
-  integrity sha512-Ruxn/0Yqn+ElGF3IIhoYAkANuxuq6DXJXRs89LUVHTB/Qt5FwK/K+ieHmz2XVJoM1EzsOUeAjzLE1s1xDlOypg==
+esbuild@^0.5.3:
+  version "0.5.3"
+  resolved "https://registry.yarnpkg.com/esbuild/-/esbuild-0.5.3.tgz#18f5bdb618220c6f14bcb1cf5af528d02d4734c9"
+  integrity sha512-RVzTK62svYjnh+agJRh+NWfZX74iKwFNUX52cF7Mo4QPS6bKxP1o+8GacPUMND2QnodVp2D3nKJs8gLspSfZzA==
 
 escape-string-regexp@^1.0.5:
   version "1.0.5"
@@ -2965,10 +2965,10 @@ rollup-plugin-dts@^1.4.7:
   optionalDependencies:
     "@babel/code-frame" "^7.8.3"
 
-rollup@^2.15.0:
-  version "2.15.0"
-  resolved "https://registry.yarnpkg.com/rollup/-/rollup-2.15.0.tgz#1324633188c7f82138bd3bdc99416009ee541f48"
-  integrity sha512-HAk4kyXiV5sdNDnbKWk5zBPnkX/DAgx09Kbp8rRIRDVsTUVN3vnSowR7ZHkV6/lAiE6c2TQ8HtYb72aCPGW4Jw==
+rollup@^2.16.1:
+  version "2.16.1"
+  resolved "https://registry.yarnpkg.com/rollup/-/rollup-2.16.1.tgz#97805e88071e2c6727bd0b64904976d14495c873"
+  integrity sha512-UYupMcbFtoWLB6ZtL4hPZNUTlkXjJfGT33Mmhz3hYLNmRj/cOvX2B26ZxDQuEpwtLdcyyyraBGQ7EfzmMJnXXg==
   optionalDependencies:
     fsevents "~2.1.2"
 
