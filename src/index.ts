@@ -85,7 +85,7 @@ export default (options: Options = {}): Plugin => {
 
       const result = await service.transform(code, {
         loader,
-        target: options.target || 'es2015',
+        target: options.target || 'es2017',
         jsxFactory: options.jsxFactory,
         jsxFragment: options.jsxFragment,
         define: options.define,
