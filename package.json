@@ -28,6 +28,6 @@
   },
   "dependencies": {
     "@rollup/pluginutils": "^3.1.0",
-    "esbuild": "^0.5.9"
+    "esbuild": "^0.5.23"
   }
 }
