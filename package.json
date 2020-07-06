@@ -15,7 +15,7 @@
     "dist"
   ],
   "devDependencies": {
-    "@types/jest": "^26.0.3",
+    "@types/jest": "^26.0.4",
     "@types/mock-fs": "^4.10.0",
     "jest": "^26.1.0",
     "mock-fs": "^4.12.0",
