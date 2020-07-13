@@ -1236,10 +1236,10 @@ error-ex@^1.3.1:
   dependencies:
     is-arrayish "^0.2.1"
 
-esbuild@^0.5.9:
-  version "0.5.9"
-  resolved "https://registry.yarnpkg.com/esbuild/-/esbuild-0.5.9.tgz#122446c4db6cd24f128332e1872f41896ce1aa76"
-  integrity sha512-ZCA8DRDroE4qDnT2eqtaAA4zsgSzS5H4gCAYUMcELn/ytIjkWud+l+363BHKohXfo5rZfl3DMynEWD4/XFA00w==
+esbuild@^0.6.2:
+  version "0.6.2"
+  resolved "https://registry.yarnpkg.com/esbuild/-/esbuild-0.6.2.tgz#8151be0d8783a778f85148cef46ecdf6aad08260"
+  integrity sha512-l4p1jJwLuRr+UMgCkdgQrSaU1fSmjRgZgx1ELjV+doGS3rLtzdCR17IfLxWEdGbtpYdrvvvRVlWYsYnFCcNaLw==
 
 escape-string-regexp@^1.0.5:
   version "1.0.5"
