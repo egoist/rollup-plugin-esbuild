@@ -26,8 +26,8 @@ export default {
       target: 'es2017' // default, or 'es20XX', 'esnext'
       jsxFactory: 'React.createElement',
       jsxFragment: 'React.Fragment'
-      // Allow JSX syntax in .js and .ts files
-      allowJsx: false, // default, or true
+      // Specify loader for extension(s)
+      loader: { '.js': 'jsx' },
       // Like @rollup/plugin-replace
       define: {
         __VERSION__: '"x.y.z"'

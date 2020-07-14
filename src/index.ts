@@ -14,7 +14,7 @@ export type Options = {
   target?: Target
   jsxFactory?: string
   jsxFragment?: string
-  allowJsx?: boolean
+  loader?: { [ext: string]: Loader }
   define?: {
     [k: string]: string
   }
@@ -78,15 +78,8 @@ export default (options: Options = {}): Plugin => {
         return null
       }
 
-      let loader = extname(id).slice(1) as Loader
-
-      if (options.allowJsx) {
-        if (loader === 'js') {
-          loader = 'jsx'
-        } else if (loader === 'ts') {
-          loader = 'tsx'
-        }
-      }
+      const ext = extname(id)
+      const loader = options.loader?.[ext] || (ext.slice(1) as Loader)
 
       if (!loaders.includes(loader) || !service) {
         return null
