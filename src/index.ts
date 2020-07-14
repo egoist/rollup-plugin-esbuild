@@ -80,7 +80,7 @@ export default (options: Options = {}): Plugin => {
 
       let loader = extname(id).slice(1) as Loader
 
-      if (!!options.allowJsx) {
+      if (options.allowJsx) {
         if (loader === 'js') {
           loader = 'jsx'
         } else if (loader === 'ts') {
