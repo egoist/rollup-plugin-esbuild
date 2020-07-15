@@ -24,7 +24,6 @@ export type Options = {
   }
   /**
    * Map extension to esbuild loader
-   * Defaults to extension without the leading dot `.`
    * Note that each entry (the extension) needs to start with a dot
    */
   loaders?: {
