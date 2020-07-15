@@ -4,7 +4,12 @@ import { Plugin, PluginContext } from 'rollup'
 import { startService, Loader, Service, Target, TransformResult } from 'esbuild'
 import { createFilter, FilterPattern } from '@rollup/pluginutils'
 
-const loaders: Loader[] = ['js', 'jsx', 'ts', 'tsx']
+const defaultLoaders: { [ext: string]: Loader } = {
+  '.js': 'js',
+  '.jsx': 'jsx',
+  '.ts': 'ts',
+  '.tsx': 'tsx',
+}
 
 export type Options = {
   include?: FilterPattern
@@ -17,12 +22,40 @@ export type Options = {
   define?: {
     [k: string]: string
   }
+  /**
+   * Map extension to esbuild loader
+   * Defaults to extension without the leading dot `.`
+   * Note that each entry (the extension) needs to start with a dot
+   */
+  loaders?: {
+    [ext: string]: Loader | false
+  }
 }
 
 export default (options: Options = {}): Plugin => {
+  const loaders = {
+    ...defaultLoaders,
+  }
+  if (options.loaders) {
+    for (const key of Object.keys(options.loaders)) {
+      const value = options.loaders[key]
+      if (typeof value === 'string') {
+        loaders[key] = value
+      } else if (value === false) {
+        delete loaders[key]
+      }
+    }
+  }
+
+  const extensions: string[] = Object.keys(loaders)
+  const INCLUDE_REGEXP = new RegExp(
+    `\\.(${extensions.map((ext) => ext.slice(1)).join('|')})$`
+  )
+  const EXCLUDE_REGEXP = /node_modules/
+
   const filter = createFilter(
-    options.include || /\.[jt]sx?$/,
-    options.exclude || /node_modules/
+    options.include || INCLUDE_REGEXP,
+    options.exclude || EXCLUDE_REGEXP
   )
 
   let service: Service | undefined
@@ -38,10 +71,8 @@ export default (options: Options = {}): Plugin => {
   // buildStart -> resolveId -> transform -> buildEnd -> renderChunk -> generateBundle
 
   const resolveFile = (resolved: string, index: boolean = false) => {
-    for (const loader of loaders) {
-      const file = index
-        ? join(resolved, `index.${loader}`)
-        : `${resolved}.${loader}`
+    for (const ext of extensions) {
+      const file = index ? join(resolved, `index${ext}`) : `${resolved}${ext}`
       if (existsSync(file)) return file
     }
     return null
@@ -77,9 +108,10 @@ export default (options: Options = {}): Plugin => {
         return null
       }
 
-      const loader = extname(id).slice(1) as Loader
+      const ext = extname(id)
+      const loader = loaders[ext]
 
-      if (!loaders.includes(loader) || !service) {
+      if (!loader || !service) {
         return null
       }
 

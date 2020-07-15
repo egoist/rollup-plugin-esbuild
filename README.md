@@ -29,6 +29,14 @@ export default {
       // Like @rollup/plugin-replace
       define: {
         __VERSION__: '"x.y.z"'
+      },
+      // Add extra loaders
+      loaders: {
+        // Add .json files support
+        // require @rollup/plugin-commonjs
+        '.json': 'json',
+        // Enable JSX in .js files too
+        '.js': 'jsx'
       }
     }),
   ],
