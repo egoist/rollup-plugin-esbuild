@@ -37,7 +37,7 @@ test('simple', async () => {
   expect(output[0].code).toMatchInlineSnapshot(`
     "class Foo {
       render() {
-        return React.createElement(\\"div\\", {
+        return /* @__PURE__ */ React.createElement(\\"div\\", {
           className: \\"hehe\\"
         }, \\"hello there!!!\\");
       }
@@ -76,7 +76,7 @@ test('load index.(x)', async () => {
   expect(output[0].code).toMatchInlineSnapshot(`
     "class Foo {
       render() {
-        return React.createElement(\\"div\\", {
+        return /* @__PURE__ */ React.createElement(\\"div\\", {
           className: \\"hehe\\"
         }, \\"hello there!!!\\");
       }
