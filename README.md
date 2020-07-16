@@ -19,7 +19,7 @@ export default {
   plugins: [
     esbuild({
       // All options are optional
-      include: /\.[jt]sx?$/, // default
+      include: /\.[jt]sx?$/, // default, inferred from `loaders` option
       exclude: /node_modules/, // default
       watch: process.argv.includes('--watch'),
       minify: process.env.NODE_ENV === 'production',
@@ -29,6 +29,14 @@ export default {
       // Like @rollup/plugin-replace
       define: {
         __VERSION__: '"x.y.z"'
+      },
+      // Add extra loaders
+      loaders: {
+        // Add .json files support
+        // require @rollup/plugin-commonjs
+        '.json': 'json',
+        // Enable JSX in .js files too
+        '.js': 'jsx'
       }
     }),
   ],
