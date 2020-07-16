@@ -1,7 +1,7 @@
 import { existsSync, statSync } from 'fs'
 import { extname, resolve, dirname, join, relative } from 'path'
 import { Plugin, PluginContext } from 'rollup'
-import { startService, Loader, Service, Target, TransformResult } from 'esbuild'
+import { startService, Loader, Service, TransformResult } from 'esbuild'
 import { createFilter, FilterPattern } from '@rollup/pluginutils'
 
 const defaultLoaders: { [ext: string]: Loader } = {
@@ -16,7 +16,7 @@ export type Options = {
   exclude?: FilterPattern
   watch?: boolean
   minify?: boolean
-  target?: Target
+  target?: string | string[]
   jsxFactory?: string
   jsxFragment?: string
   define?: {

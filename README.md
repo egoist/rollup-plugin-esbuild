@@ -5,7 +5,7 @@
 ## Install
 
 ```bash
-yarn add rollup-plugin-esbuild --dev
+yarn add esbuild rollup-plugin-esbuild --dev
 ```
 
 ## Usage
