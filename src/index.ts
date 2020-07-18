@@ -16,6 +16,7 @@ export type Options = {
   include?: FilterPattern
   exclude?: FilterPattern
   watch?: boolean
+  sourceMap?: boolean
   minify?: boolean
   target?: string | string[]
   jsxFactory?: string
@@ -123,6 +124,7 @@ export default (options: Options = {}): Plugin => {
         jsxFactory: options.jsxFactory || defaultOptions.jsxFactory,
         jsxFragment: options.jsxFragment || defaultOptions.jsxFragment,
         define: options.define,
+        sourcemap: options.sourceMap
       })
 
       printWarnings(id, result, this)
