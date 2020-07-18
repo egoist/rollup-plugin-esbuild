@@ -1,6 +1,6 @@
 # rollup-plugin-esbuild
 
-[esbuild](https://github.com/evanw/esbuild) is by far one of the fastest TS/ESNext to ES6 compilers, so it makes sense to use it over Babel/TSC with Rollup to take advantage of both worlds (Speed and the Rollup plugin ecosytem).
+[esbuild](https://github.com/evanw/esbuild) is by far one of the fastest TS/ESNext to ES6 compilers and minifier, this plugin replaces `rollup-plugin-typescript2`, `@rollup/plugin-typescript` and `rollup-plugin-terser` for you.
 
 ## Install
 
