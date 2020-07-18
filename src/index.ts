@@ -90,7 +90,7 @@ export default (options: Options = {}): Plugin => {
         jsxFactory: options.jsxFactory,
         jsxFragment: options.jsxFragment,
         define: options.define,
-        sourcemap: options.sourceMap !== false,
+        sourcemap: options.sourceMap
       })
 
       printWarnings(id, result, this)
