@@ -2,9 +2,12 @@ import { rollup } from 'rollup'
 import mockfs from 'mock-fs'
 import esbuild, { Options } from '../src'
 
-const build = async (options?: Options) => {
+const build = async (
+  options?: Options,
+  { input = './fixture/index.js' } = {}
+) => {
   const bundle = await rollup({
-    input: './fixture/index.js',
+    input,
     plugins: [esbuild(options)],
   })
   const { output } = await bundle.generate({ format: 'esm' })
@@ -119,6 +122,29 @@ test('load json', async () => {
     });
 
     console.log(foo);
+    "
+  `)
+})
+
+test('use custom jsxFactory (h) from tsconfig', async () => {
+  mockfs({
+    './fixture/index.jsx': `
+      export const foo = <div>foo</div>
+    `,
+    './fixture/tsconfig.json': `
+      {
+        "compilerOptions": {
+          "jsxFactory": "h"
+        }
+      }
+    `,
+  })
+
+  const output = await build({}, { input: './fixture/index.jsx' })
+  expect(output[0].code).toMatchInlineSnapshot(`
+    "const foo = /* @__PURE__ */ h(\\"div\\", null, \\"foo\\");
+
+    export { foo };
     "
   `)
 })

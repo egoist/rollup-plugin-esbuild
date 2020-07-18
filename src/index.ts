@@ -3,6 +3,7 @@ import { extname, resolve, dirname, join, relative } from 'path'
 import { Plugin, PluginContext } from 'rollup'
 import { startService, Loader, Service, TransformResult } from 'esbuild'
 import { createFilter, FilterPattern } from '@rollup/pluginutils'
+import { getOptions } from './options'
 
 const defaultLoaders: { [ext: string]: Loader } = {
   '.js': 'js',
@@ -114,11 +115,13 @@ export default (options: Options = {}): Plugin => {
         return null
       }
 
+      const defaultOptions = await getOptions(dirname(id))
+
       const result = await service.transform(code, {
         loader,
-        target: options.target || 'es2017',
-        jsxFactory: options.jsxFactory,
-        jsxFragment: options.jsxFragment,
+        target: options.target || defaultOptions.target || 'es2017',
+        jsxFactory: options.jsxFactory || defaultOptions.jsxFactory,
+        jsxFragment: options.jsxFragment || defaultOptions.jsxFragment,
         define: options.define,
       })
 
