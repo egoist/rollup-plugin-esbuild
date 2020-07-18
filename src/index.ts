@@ -25,6 +25,11 @@ export type Options = {
     [k: string]: string
   }
   /**
+   * Use this tsconfig file instead
+   * Disable it by setting to `false`
+   */
+  tsconfig?: string | false
+  /**
    * Map extension to esbuild loader
    * Note that each entry (the extension) needs to start with a dot
    */
@@ -116,7 +121,10 @@ export default (options: Options = {}): Plugin => {
         return null
       }
 
-      const defaultOptions = await getOptions(dirname(id))
+      const defaultOptions =
+        options.tsconfig === false
+          ? {}
+          : await getOptions(dirname(id), options.tsconfig)
 
       const result = await service.transform(code, {
         loader,
@@ -124,7 +132,7 @@ export default (options: Options = {}): Plugin => {
         jsxFactory: options.jsxFactory || defaultOptions.jsxFactory,
         jsxFragment: options.jsxFragment || defaultOptions.jsxFragment,
         define: options.define,
-        sourcemap: options.sourceMap
+        sourcemap: options.sourceMap,
       })
 
       printWarnings(id, result, this)

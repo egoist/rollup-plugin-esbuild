@@ -13,10 +13,11 @@ joycon.addLoader({
 })
 
 export const getOptions = async (
-  cwd: string
+  cwd: string,
+  tsconfig?: string
 ): Promise<{ jsxFactory?: string; jsxFragment?: string; target?: string }> => {
   // This call is cached
-  const { data, path } = await joycon.load(['tsconfig.json'], cwd)
+  const { data, path } = await joycon.load([tsconfig || 'tsconfig.json'], cwd)
   if (path && data) {
     return {
       jsxFactory: data.compilerOptions?.jsxFactory,

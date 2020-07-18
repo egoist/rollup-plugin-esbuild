@@ -148,3 +148,36 @@ test('use custom jsxFactory (h) from tsconfig', async () => {
     "
   `)
 })
+
+test('use custom tsconfig.json', async () => {
+  mockfs({
+    './fixture/index.jsx': `
+      export const foo = <div>foo</div>
+    `,
+    './fixture/tsconfig.json': `
+      {
+        "compilerOptions": {
+          "jsxFactory": "h"
+        }
+      }
+    `,
+    './fixture/tsconfig.build.json': `
+      {
+        "compilerOptions": {
+          "jsxFactory": "custom"
+        }
+      }
+    `,
+  })
+
+  const output = await build(
+    { tsconfig: 'tsconfig.build.json' },
+    { input: './fixture/index.jsx' }
+  )
+  expect(output[0].code).toMatchInlineSnapshot(`
+    "const foo = /* @__PURE__ */ custom(\\"div\\", null, \\"foo\\");
+
+    export { foo };
+    "
+  `)
+})
