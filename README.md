@@ -1,5 +1,7 @@
 # rollup-plugin-esbuild
 
+![npm version](https://badgen.net/npm/v/rollup-plugin-esbuild) ![npm downloads](https://badgen.net/npm/dm/rollup-plugin-esbuild)
+
 [esbuild](https://github.com/evanw/esbuild) is by far one of the fastest TS/ESNext to ES6 compilers and minifier, this plugin replaces `rollup-plugin-typescript2`, `@rollup/plugin-typescript` and `rollup-plugin-terser` for you.
 
 ## Install
