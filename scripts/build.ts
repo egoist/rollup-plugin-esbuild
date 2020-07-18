@@ -1,4 +1,4 @@
-import { builtinModules } from 'module'
+import module from 'module'
 import { rollup } from 'rollup'
 
 import dts from 'rollup-plugin-dts'
@@ -8,7 +8,7 @@ const pkg: { [k: string]: any } = require('../package.json')
 const deps = Object.keys(pkg.dependencies)
 
 async function main() {
-  const external = [...deps, ...builtinModules]
+  const external = [...deps, ...module.builtinModules]
 
   async function build() {
     const bundle = await rollup({
