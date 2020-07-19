@@ -5,6 +5,7 @@
   "types": "dist/index.d.ts",
   "author": "EGOIST",
   "license": "MIT",
+  "repository": "https://github.com/egoist/rollup-plugin-esbuild",
   "scripts": {
     "test": "jest",
     "example": "npm run build && rollup -c example/rollup.config.js",
