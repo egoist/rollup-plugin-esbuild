@@ -20,7 +20,7 @@
     "@types/mock-fs": "^4.10.0",
     "@types/node": "12.12.50",
     "esbuild": "^0.6.15",
-    "jest": "^26.2.2",
+    "jest": "^26.3.0",
     "mock-fs": "^4.12.0",
     "prettier": "^2.0.5",
     "rollup": "^2.23.0",
