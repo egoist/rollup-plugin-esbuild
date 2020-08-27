@@ -15,7 +15,6 @@ const defaultLoaders: { [ext: string]: Loader } = {
 export type Options = {
   include?: FilterPattern
   exclude?: FilterPattern
-  watch?: boolean
   sourceMap?: boolean
   minify?: boolean
   target?: string | string[]
@@ -67,7 +66,7 @@ export default (options: Options = {}): Plugin => {
   let service: Service | undefined
 
   const stopService = () => {
-    if (!options.watch && service) {
+    if (service) {
       service.stop()
       service = undefined
     }
@@ -147,7 +146,7 @@ export default (options: Options = {}): Plugin => {
 
     buildEnd(error) {
       // Stop the service early if there's error
-      if (error) {
+      if (error && !this.meta.watchMode) {
         stopService()
       }
     },
@@ -170,7 +169,9 @@ export default (options: Options = {}): Plugin => {
     },
 
     generateBundle() {
-      stopService()
+      if (!this.meta.watchMode) {
+        stopService()
+      }
     },
   }
 }
