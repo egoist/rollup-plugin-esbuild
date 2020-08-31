@@ -19,7 +19,7 @@
     "@types/jest": "^26.0.10",
     "@types/mock-fs": "^4.10.0",
     "@types/node": "12.12.50",
-    "esbuild": "^0.6.15",
+    "esbuild": "^0.6.28",
     "jest": "^26.4.2",
     "mock-fs": "^4.13.0",
     "prettier": "^2.1.1",
