@@ -132,7 +132,7 @@ export default (options: Options = {}): Plugin => {
         jsxFragment: options.jsxFragment || defaultOptions.jsxFragment,
         define: options.define,
         sourcemap: options.sourceMap,
-      }
+      } as Record<string, unknown>
 
       Object.keys(config).forEach(key => config[key] === undefined && delete config[key])
 
