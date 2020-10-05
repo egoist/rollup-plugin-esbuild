@@ -25,7 +25,7 @@
     "prettier": "^2.1.2",
     "rollup": "^2.28.2",
     "rollup-plugin-dts": "^1.4.10",
-    "ts-jest": "^26.4.0",
+    "ts-jest": "^26.4.1",
     "ts-node": "^9.0.0",
     "typescript": "^3.9.7"
   },
