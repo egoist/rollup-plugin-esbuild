@@ -131,7 +131,7 @@ export default (options: Options = {}): Plugin => {
         jsxFactory: options.jsxFactory || defaultOptions.jsxFactory,
         jsxFragment: options.jsxFragment || defaultOptions.jsxFragment,
         define: options.define,
-        sourcemap: options.sourceMap,
+        sourcemap: options.sourceMap !== false,
         sourcefile: id,
       })
 
