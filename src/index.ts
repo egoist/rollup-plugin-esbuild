@@ -132,6 +132,7 @@ export default (options: Options = {}): Plugin => {
         jsxFragment: options.jsxFragment || defaultOptions.jsxFragment,
         define: options.define,
         sourcemap: options.sourceMap,
+        sourcefile: id,
       })
 
       printWarnings(id, result, this)
