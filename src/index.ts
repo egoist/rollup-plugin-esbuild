@@ -152,23 +152,6 @@ export default (options: Options = {}): Plugin => {
       }
     },
 
-    async renderChunk(code) {
-      if (options.minify && service) {
-        const result = await service.transform(code, {
-          loader: 'js',
-          target: 'esnext',
-          minify: true,
-        })
-        if (result.js) {
-          return {
-            code: result.js,
-            map: result.jsSourceMap || null,
-          }
-        }
-      }
-      return null
-    },
-
     generateBundle() {
       if (!this.meta.watchMode) {
         stopService()
