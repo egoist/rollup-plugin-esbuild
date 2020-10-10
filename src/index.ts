@@ -38,9 +38,12 @@ export type Options = {
 }
 
 export default (options: Options = {}): Plugin => {
+  let target: string | string[]
+
   const loaders = {
     ...defaultLoaders,
   }
+
   if (options.loaders) {
     for (const key of Object.keys(options.loaders)) {
       const value = options.loaders[key]
@@ -125,9 +128,11 @@ export default (options: Options = {}): Plugin => {
           ? {}
           : await getOptions(dirname(id), options.tsconfig)
 
+      target = options.target || defaultOptions.target || 'es2017'
+
       const result = await service.transform(code, {
         loader,
-        target: options.target || defaultOptions.target || 'es2017',
+        target,
         jsxFactory: options.jsxFactory || defaultOptions.jsxFactory,
         jsxFragment: options.jsxFragment || defaultOptions.jsxFragment,
         define: options.define,
@@ -156,8 +161,8 @@ export default (options: Options = {}): Plugin => {
       if (options.minify && service) {
         const result = await service.transform(code, {
           loader: 'js',
-          target: 'esnext',
           minify: true,
+          target,
         })
         if (result.js) {
           return {
