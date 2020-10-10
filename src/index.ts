@@ -38,7 +38,7 @@ export type Options = {
 }
 
 export default (options: Options = {}): Plugin => {
-  let target: string | string[];
+  let target: string | string[]
 
   const loaders = {
     ...defaultLoaders,
@@ -128,7 +128,7 @@ export default (options: Options = {}): Plugin => {
           ? {}
           : await getOptions(dirname(id), options.tsconfig)
 
-      target = options.target || defaultOptions.target || 'es2017';
+      target = options.target || defaultOptions.target || 'es2017'
 
       const result = await service.transform(code, {
         loader,
