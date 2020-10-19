@@ -23,7 +23,7 @@
     "jest": "^26.5.3",
     "mock-fs": "^4.13.0",
     "prettier": "^2.1.2",
-    "rollup": "^2.29.0",
+    "rollup": "^2.32.0",
     "rollup-plugin-dts": "^1.4.10",
     "ts-jest": "^26.4.1",
     "ts-node": "^9.0.0",
