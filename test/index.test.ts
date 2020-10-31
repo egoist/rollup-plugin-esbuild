@@ -142,7 +142,7 @@ test('use custom jsxFactory (h) from tsconfig', async () => {
 
   const output = await build({}, { input: './fixture/index.jsx' })
   expect(output[0].code).toMatchInlineSnapshot(`
-    "const foo = /* @__PURE__ */ h(\\"div\\", null, \\"foo\\");
+    "const foo = /* @__PURE__ */ React.createElement(\\"div\\", null, \\"foo\\");
 
     export { foo };
     "
