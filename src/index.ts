@@ -143,9 +143,9 @@ export default (options: Options = {}): Plugin => {
       printWarnings(id, result, this)
 
       return (
-        result.js && {
-          code: result.js,
-          map: result.jsSourceMap || null,
+        result.code && {
+          code: result.code,
+          map: result.map || null,
         }
       )
     },
@@ -164,10 +164,10 @@ export default (options: Options = {}): Plugin => {
           minify: true,
           target,
         })
-        if (result.js) {
+        if (result.code) {
           return {
-            code: result.js,
-            map: result.jsSourceMap || null,
+            code: result.code,
+            map: result.map || null,
           }
         }
       }
