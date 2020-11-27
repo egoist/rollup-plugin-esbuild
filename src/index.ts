@@ -125,14 +125,14 @@ export default (options: Options = {}): Plugin => {
           ? {}
           : await getOptions(dirname(id), options.tsconfig)
 
-      const config = {
+      const config: Options = {
         loader,
         target: options.target || defaultOptions.target || 'es2017',
         jsxFactory: options.jsxFactory || defaultOptions.jsxFactory,
         jsxFragment: options.jsxFragment || defaultOptions.jsxFragment,
         define: options.define,
         sourcemap: options.sourceMap,
-      } as Record<string, unknown>
+      }
 
       Object.keys(config).forEach(key => config[key] === undefined && delete config[key])
 
