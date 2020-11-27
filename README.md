@@ -32,6 +32,7 @@ export default {
       define: {
         __VERSION__: '"x.y.z"'
       },
+      tsconfig: 'tsconfig.json', // default
       // Add extra loaders
       loaders: {
         // Add .json files support
