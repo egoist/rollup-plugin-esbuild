@@ -16,26 +16,26 @@
     "dist"
   ],
   "devDependencies": {
-    "@types/jest": "^26.0.13",
-    "@types/mock-fs": "^4.10.0",
-    "@types/node": "14.6.4",
-    "esbuild": "^0.6.28",
-    "jest": "^26.4.2",
+    "@types/jest": "^26.0.15",
+    "@types/mock-fs": "^4.13.0",
+    "@types/node": "14.14.9",
+    "esbuild": "^0.8.0",
+    "jest": "^26.6.3",
     "mock-fs": "^4.13.0",
-    "prettier": "^2.1.1",
-    "rollup": "^2.26.10",
+    "prettier": "^2.2.0",
+    "rollup": "^2.33.3",
     "rollup-plugin-dts": "^1.4.10",
-    "ts-jest": "^26.3.0",
+    "ts-jest": "^26.4.4",
     "ts-node": "^9.0.0",
     "typescript": "^3.9.7"
   },
   "dependencies": {
-    "@rollup/pluginutils": "^4.0.0",
+    "@rollup/pluginutils": "^4.1.0",
     "joycon": "^2.2.5",
     "strip-json-comments": "^3.1.1"
   },
   "peerDependencies": {
-    "esbuild": "^0.6.0"
+    "esbuild": "^0.8.0"
   },
   "engines": {
     "node": ">=12"

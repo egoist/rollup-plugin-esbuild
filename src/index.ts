@@ -38,9 +38,12 @@ export type Options = {
 }
 
 export default (options: Options = {}): Plugin => {
+  let target: string | string[]
+
   const loaders = {
     ...defaultLoaders,
   }
+
   if (options.loaders) {
     for (const key of Object.keys(options.loaders)) {
       const value = options.loaders[key]
@@ -126,12 +129,14 @@ export default (options: Options = {}): Plugin => {
           : await getOptions(dirname(id), options.tsconfig)
 
       const config: Options = {
+        target = options.target || defaultOptions.target || 'es2017'
         loader,
-        target: options.target || defaultOptions.target || 'es2017',
+        target,
         jsxFactory: options.jsxFactory || defaultOptions.jsxFactory,
         jsxFragment: options.jsxFragment || defaultOptions.jsxFragment,
         define: options.define,
-        sourcemap: options.sourceMap,
+        sourcemap: options.sourceMap !== false,
+        sourcefile: id,
       }
 
       Object.keys(config).forEach(key => config[key] === undefined && delete config[key])
@@ -141,9 +146,9 @@ export default (options: Options = {}): Plugin => {
       printWarnings(id, result, this)
 
       return (
-        result.js && {
-          code: result.js,
-          map: result.jsSourceMap || null,
+        result.code && {
+          code: result.code,
+          map: result.map || null,
         }
       )
     },
@@ -159,13 +164,13 @@ export default (options: Options = {}): Plugin => {
       if (options.minify && service) {
         const result = await service.transform(code, {
           loader: 'js',
-          target: 'esnext',
           minify: true,
+          target,
         })
-        if (result.js) {
+        if (result.code) {
           return {
-            code: result.js,
-            map: result.jsSourceMap || null,
+            code: result.code,
+            map: result.map || null,
           }
         }
       }

@@ -32,6 +32,7 @@ export default {
       define: {
         __VERSION__: '"x.y.z"'
       },
+      tsconfig: 'tsconfig.json', // default
       // Add extra loaders
       loaders: {
         // Add .json files support
@@ -55,6 +56,25 @@ There are serveral ways to generate declaration file:
 - Use `tsc` with `emitDeclarationOnly`, the slowest way but you get type checking, it doesn't bundle the `.d.ts` files.
 - Use [`rollup-plugin-dts`](https://github.com/Swatinem/rollup-plugin-dts) which generates and bundle `.d.ts`, also does type checking.
 - Use [`api-extractor`](https://api-extractor.com/) by Microsoft, looks quite complex to me so I didn't try it, PR welcome to update this section.
+
+### Use with Vue JSX
+
+Use this with [rollup-plugin-vue-jsx](https://github.com/xxholly32/rollup-plugin-vue-jsx):
+
+```js
+import vueJsx from 'rollup-plugin-vue-jsx-compat'
+import esbuild from 'rollup-plugin-esbuild'
+
+export default {
+  // ...
+  plugins: [
+    vueJsx(),
+    esbuild({
+      jsxFactory: "vueJsxCompat",
+    }),
+  ],
+}
+```
 
 ## License
 
