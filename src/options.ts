@@ -19,10 +19,14 @@ export const getOptions = async (
   // This call is cached
   const { data, path } = await joycon.load([tsconfig || 'tsconfig.json'], cwd)
   if (path && data) {
+    const { jsxFactory, jsxFragmentFactory, target } =
+      data.compilerOptions || {}
     return {
-      jsxFactory: data.compilerOptions?.jsxFactory,
-      jsxFragment: data.compilerOptions?.jsxFragmentFactory,
-      target: data.compilerOptions?.target,
+      jsxFactory,
+      jsxFragment: jsxFragmentFactory,
+      // Lowercased value to be compatible with esbuild
+      // Maybe remove in 3.0, #77
+      target: target && target.toLowerCase(),
     }
   }
   return {}
