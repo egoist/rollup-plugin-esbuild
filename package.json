@@ -18,7 +18,7 @@
   "devDependencies": {
     "@types/jest": "^26.0.19",
     "@types/mock-fs": "^4.13.0",
-    "@types/node": "14.14.14",
+    "@types/node": "14.14.16",
     "esbuild": "^0.8.0",
     "jest": "^26.6.3",
     "mock-fs": "^4.13.0",
