@@ -2,13 +2,11 @@
 
 ---
 
-
 # rollup-plugin-esbuild
 
 ![npm version](https://badgen.net/npm/v/rollup-plugin-esbuild) ![npm downloads](https://badgen.net/npm/dm/rollup-plugin-esbuild)
 
 [esbuild](https://github.com/evanw/esbuild) is by far one of the fastest TS/ESNext to ES6 compilers and minifier, this plugin replaces `rollup-plugin-typescript2`, `@rollup/plugin-typescript` and `rollup-plugin-terser` for you.
-
 
 ## Install
 
@@ -31,12 +29,12 @@ export default {
       exclude: /node_modules/, // default
       sourceMap: false, // default
       minify: process.env.NODE_ENV === 'production',
-      target: 'es2017' // default, or 'es20XX', 'esnext'
+      target: 'es2017', // default, or 'es20XX', 'esnext'
       jsxFactory: 'React.createElement',
-      jsxFragment: 'React.Fragment'
+      jsxFragment: 'React.Fragment',
       // Like @rollup/plugin-replace
       define: {
-        __VERSION__: '"x.y.z"'
+        __VERSION__: '"x.y.z"',
       },
       tsconfig: 'tsconfig.json', // default
       // Add extra loaders
@@ -45,8 +43,8 @@ export default {
         // require @rollup/plugin-commonjs
         '.json': 'json',
         // Enable JSX in .js files too
-        '.js': 'jsx'
-      }
+        '.js': 'jsx',
+      },
     }),
   ],
 }
@@ -76,7 +74,7 @@ export default {
   plugins: [
     vueJsx(),
     esbuild({
-      jsxFactory: "vueJsxCompat",
+      jsxFactory: 'vueJsxCompat',
     }),
   ],
 }
