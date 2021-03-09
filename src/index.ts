@@ -128,9 +128,8 @@ export default (options: Options = {}): Plugin => {
           ? {}
           : await getOptions(dirname(id), options.tsconfig)
 
-      target = options.target || defaultOptions.target || 'es2017'
-
-      const result = await service.transform(code, {
+      const config: Options = {
+        target = options.target || defaultOptions.target || 'es2017'
         loader,
         target,
         jsxFactory: options.jsxFactory || defaultOptions.jsxFactory,
@@ -138,7 +137,11 @@ export default (options: Options = {}): Plugin => {
         define: options.define,
         sourcemap: options.sourceMap !== false,
         sourcefile: id,
-      })
+      }
+
+      Object.keys(config).forEach(key => config[key] === undefined && delete config[key])
+
+      const result = await service.transform(code, config)
 
       printWarnings(id, result, this)
 
