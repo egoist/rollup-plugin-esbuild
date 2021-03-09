@@ -1,7 +1,7 @@
 import { existsSync, statSync } from 'fs'
 import { extname, resolve, dirname, join, relative } from 'path'
 import { Plugin, PluginContext } from 'rollup'
-import { startService, Loader, Service, TransformResult } from 'esbuild'
+import { transform, Loader, TransformResult } from 'esbuild'
 import { createFilter, FilterPattern } from '@rollup/pluginutils'
 import { getOptions } from './options'
 
@@ -66,15 +66,6 @@ export default (options: Options = {}): Plugin => {
     options.exclude || EXCLUDE_REGEXP
   )
 
-  let service: Service | undefined
-
-  const stopService = () => {
-    if (service) {
-      service.stop()
-      service = undefined
-    }
-  }
-
   // The order is:
   // buildStart -> resolveId -> transform -> buildEnd -> renderChunk -> generateBundle
 
@@ -88,12 +79,6 @@ export default (options: Options = {}): Plugin => {
 
   return {
     name: 'esbuild',
-
-    async buildStart() {
-      if (!service) {
-        service = await startService()
-      }
-    },
 
     resolveId(importee, importer) {
       if (importer && importee[0] === '.') {
@@ -119,7 +104,7 @@ export default (options: Options = {}): Plugin => {
       const ext = extname(id)
       const loader = loaders[ext]
 
-      if (!loader || !service) {
+      if (!loader) {
         return null
       }
 
@@ -130,7 +115,7 @@ export default (options: Options = {}): Plugin => {
 
       target = options.target || defaultOptions.target || 'es2017'
 
-      const result = await service.transform(code, {
+      const result = await transform(code, {
         loader,
         target,
         jsxFactory: options.jsxFactory || defaultOptions.jsxFactory,
@@ -150,16 +135,9 @@ export default (options: Options = {}): Plugin => {
       )
     },
 
-    buildEnd(error) {
-      // Stop the service early if there's error
-      if (error && !this.meta.watchMode) {
-        stopService()
-      }
-    },
-
     async renderChunk(code) {
-      if (options.minify && service) {
-        const result = await service.transform(code, {
+      if (options.minify) {
+        const result = await transform(code, {
           loader: 'js',
           minify: true,
           target,
@@ -172,12 +150,6 @@ export default (options: Options = {}): Plugin => {
         }
       }
       return null
-    },
-
-    generateBundle() {
-      if (!this.meta.watchMode) {
-        stopService()
-      }
     },
   }
 }
