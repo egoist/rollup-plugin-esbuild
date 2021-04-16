@@ -141,6 +141,7 @@ export default (options: Options = {}): Plugin => {
           loader: 'js',
           minify: true,
           target,
+          sourcemap: options.sourceMap !== false,
         })
         if (result.code) {
           return {

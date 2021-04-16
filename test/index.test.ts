@@ -4,13 +4,13 @@ import esbuild, { Options } from '../src'
 
 const build = async (
   options?: Options,
-  { input = './fixture/index.js' } = {}
+  { input = './fixture/index.js', sourcemap = false } = {}
 ) => {
   const bundle = await rollup({
     input,
     plugins: [esbuild(options)],
   })
-  const { output } = await bundle.generate({ format: 'esm' })
+  const { output } = await bundle.generate({ format: 'esm', sourcemap })
   return output
 }
 
