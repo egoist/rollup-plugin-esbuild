@@ -1,7 +1,7 @@
 import { existsSync, statSync } from 'fs'
 import { extname, resolve, dirname, join } from 'path'
-import { Plugin } from 'rollup'
-import { transform, Loader, formatMessages } from 'esbuild'
+import { Plugin, PluginContext } from 'rollup'
+import { transform, Loader, formatMessages, Message } from 'esbuild'
 import { createFilter, FilterPattern } from '@rollup/pluginutils'
 import { getOptions } from './options'
 
@@ -34,6 +34,16 @@ export type Options = {
    */
   loaders?: {
     [ext: string]: Loader | false
+  }
+}
+
+const warn = async (pluginContext: PluginContext, messages: Message[]) => {
+  if (messages.length > 0) {
+    const warnings = await formatMessages(messages, {
+      kind: 'warning',
+      color: true,
+    })
+    warnings.forEach((warning) => pluginContext.warn(warning))
   }
 }
 
@@ -125,13 +135,7 @@ export default (options: Options = {}): Plugin => {
         sourcefile: id,
       })
 
-      if (result.warnings.length > 0) {
-        const warnings = await formatMessages(result.warnings, {
-          kind: 'warning',
-          color: true,
-        })
-        warnings.forEach((warning) => this.warn(warning))
-      }
+      await warn(this, result.warnings)
 
       return (
         result.code && {
@@ -148,8 +152,8 @@ export default (options: Options = {}): Plugin => {
           minify: true,
           target,
           sourcemap: options.sourceMap !== false,
-          logLevel: 'warning',
         })
+        await warn(this, result.warnings)
         if (result.code) {
           return {
             code: result.code,
