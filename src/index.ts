@@ -1,7 +1,7 @@
 import { existsSync, statSync } from 'fs'
-import { extname, resolve, dirname, join, relative } from 'path'
-import { Plugin, PluginContext } from 'rollup'
-import { transform, Loader, TransformResult } from 'esbuild'
+import { extname, resolve, dirname, join } from 'path'
+import { Plugin } from 'rollup'
+import { transform, Loader, formatMessages } from 'esbuild'
 import { createFilter, FilterPattern } from '@rollup/pluginutils'
 import { getOptions } from './options'
 
@@ -125,7 +125,13 @@ export default (options: Options = {}): Plugin => {
         sourcefile: id,
       })
 
-      printWarnings(id, result, this)
+      if (result.warnings.length > 0) {
+        const warnings = await formatMessages(result.warnings, {
+          kind: 'warning',
+          color: true,
+        })
+        warnings.forEach((warning) => this.warn(warning))
+      }
 
       return (
         result.code && {
@@ -142,6 +148,7 @@ export default (options: Options = {}): Plugin => {
           minify: true,
           target,
           sourcemap: options.sourceMap !== false,
+          logLevel: 'warning',
         })
         if (result.code) {
           return {
@@ -152,24 +159,5 @@ export default (options: Options = {}): Plugin => {
       }
       return null
     },
-  }
-}
-
-function printWarnings(
-  id: string,
-  result: TransformResult,
-  plugin: PluginContext
-) {
-  if (result.warnings) {
-    for (const warning of result.warnings) {
-      let message = `[esbuild]`
-      if (warning.location) {
-        message += ` (${relative(process.cwd(), id)}:${warning.location.line}:${
-          warning.location.column
-        })`
-      }
-      message += ` ${warning.text}`
-      plugin.warn(message)
-    }
   }
 }
