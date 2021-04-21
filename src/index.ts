@@ -17,6 +17,9 @@ export type Options = {
   exclude?: FilterPattern
   sourceMap?: boolean
   minify?: boolean
+  minifyWhitespace?: boolean
+  minifyIdentifiers?: boolean
+  minifySyntax?: boolean
   target?: string | string[]
   jsxFactory?: string
   jsxFragment?: string
@@ -146,10 +149,13 @@ export default (options: Options = {}): Plugin => {
     },
 
     async renderChunk(code) {
-      if (options.minify) {
+      if (options.minify || options.minifyWhitespace || options.minifyIdentifiers || options.minifySyntax) {
         const result = await transform(code, {
           loader: 'js',
-          minify: true,
+          minify: options.minify,
+          minifyWhitespace: options.minifyWhitespace,
+          minifyIdentifiers: options.minifyIdentifiers,
+          minifySyntax: options.minifySyntax,
           target,
           sourcemap: options.sourceMap !== false,
         })

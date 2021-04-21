@@ -59,6 +59,32 @@ test('minify', async () => {
   `)
 })
 
+test('minify whitespace only', async () => {
+  mockfs({
+    './fixture/index.js': `
+      console.log(1 === 1);
+    `
+  })
+  const output = await build({ minifyWhitespace: true })
+  expect(output[0].code).toMatchInlineSnapshot(`
+    "console.log(true);
+    "
+  `)
+})
+
+test('minify syntax only', async () => {
+  mockfs({
+    './fixture/index.js': `
+      console.log(1 === 1);
+    `
+  })
+  const output = await build({ minifySyntax: true })
+  expect(output[0].code).toMatchInlineSnapshot(`
+    "console.log(!0);
+    "
+  `)
+})
+
 test('load index.(x)', async () => {
   mockfs({
     './fixture/index.js': `
