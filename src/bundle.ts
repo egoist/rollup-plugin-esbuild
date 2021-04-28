@@ -97,11 +97,11 @@ export const bundle = async (
             if (transformed.code) {
               let code = transformed.code
               if (transformed.map) {
-                const map = btoa(
+                const map = Buffer.from(
                   typeof transformed.map === 'string'
                     ? transformed.map
                     : JSON.stringify(transformed.map)
-                )
+                ).toString('base64')
                 code += `\n//# sourceMappingURL=data:application/json;base64,${map}`
               }
               return {
