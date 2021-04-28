@@ -68,9 +68,6 @@ export const bundle = async (
               | Loader
               | undefined
 
-            // Let rollup handle binary files
-            if (!loader) return
-
             let contents: string | undefined
             for (const plugin of plugins) {
               if (plugin.load && plugin.name !== 'esbuild') {
@@ -110,7 +107,7 @@ export const bundle = async (
             }
             return {
               contents,
-              loader,
+              loader: loader || 'js',
             }
           })
         },
