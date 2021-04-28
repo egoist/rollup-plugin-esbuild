@@ -1,3 +1,4 @@
+import fs from 'fs'
 import { build, Loader } from 'esbuild'
 import path from 'path'
 import { PluginContext, Plugin, LoadResult, TransformResult } from 'rollup'
@@ -44,6 +45,7 @@ export const bundle = async (
     write: false,
     sourcemap: true,
     outdir: 'dist',
+    platform: 'node',
     plugins: [
       {
         name: 'rollup',
@@ -88,7 +90,7 @@ export const bundle = async (
             }
 
             if (contents == null) {
-              return undefined
+              contents = await fs.promises.readFile(args.path, 'utf8')
             }
 
             const transformed = await transform(contents, args.path)
