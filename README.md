@@ -82,9 +82,11 @@ export default {
 
 ### Bundle mode
 
-This plugin also includes an experimental `bundle` mode which lets rollup `resolve`, `load`, and `transform` imported files but leaves bundling to esbuild.
+This plugin also includes an experimental `bundle` mode which lets rollup `resolve`, `load`, and `transform` imported files but leaves bundling to esbuild. In my simple test it's around 50% faster than non-bundle mode, but still 10x slower than raw esbuild.
 
 To enable this mode, passing `experimentalBundling: true` to the options.
+
+Current limitation: no code splitting yet.
 
 ## License
 
