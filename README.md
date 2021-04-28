@@ -80,6 +80,12 @@ export default {
 }
 ```
 
+### Bundle mode
+
+This plugin also includes an experimental `bundle` mode which lets rollup `resolve`, `load`, and `transform` imported files but leaves bundling to esbuild.
+
+To enable this mode, passing `experimentalBundling: true` to the options.
+
 ## License
 
 MIT &copy; [EGOIST (Kevin Titor)](https://github.com/sponsors/egoist)

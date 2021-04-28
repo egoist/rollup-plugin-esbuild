@@ -4,6 +4,7 @@ import { Plugin, PluginContext } from 'rollup'
 import { transform, Loader, formatMessages, Message } from 'esbuild'
 import { createFilter, FilterPattern } from '@rollup/pluginutils'
 import { getOptions } from './options'
+import { bundle } from './bundle'
 
 const defaultLoaders: { [ext: string]: Loader } = {
   '.js': 'js',
@@ -26,6 +27,7 @@ export type Options = {
   define?: {
     [k: string]: string
   }
+  experimentalBundling?: boolean
   /**
    * Use this tsconfig file instead
    * Disable it by setting to `false`
@@ -79,9 +81,6 @@ export default (options: Options = {}): Plugin => {
     options.exclude || EXCLUDE_REGEXP
   )
 
-  // The order is:
-  // buildStart -> resolveId -> transform -> buildEnd -> renderChunk -> generateBundle
-
   const resolveFile = (resolved: string, index: boolean = false) => {
     for (const ext of extensions) {
       const file = index ? join(resolved, `index${ext}`) : `${resolved}${ext}`
@@ -89,6 +88,8 @@ export default (options: Options = {}): Plugin => {
     }
     return null
   }
+
+  let plugins: Plugin[] = []
 
   return {
     name: 'esbuild',
@@ -105,6 +106,23 @@ export default (options: Options = {}): Plugin => {
         if (!file && existsSync(resolved) && statSync(resolved).isDirectory()) {
           file = resolveFile(resolved, true)
           if (file) return file
+        }
+      }
+    },
+
+    options(options) {
+      plugins = options.plugins || []
+      return null
+    },
+
+    async load(id) {
+      if (options.experimentalBundling) {
+        const bundled = await bundle(id, this, plugins, loaders)
+        if (bundled.code) {
+          return {
+            code: bundled.code,
+            map: bundled.map,
+          }
         }
       }
     },

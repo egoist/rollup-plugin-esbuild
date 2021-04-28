@@ -1,16 +1,38 @@
-import { rollup } from 'rollup'
+import os from 'os'
+import path from 'path'
+import fs from 'fs'
+import { rollup, Plugin as RollupPlugin } from 'rollup'
 import mockfs from 'mock-fs'
 import esbuild, { Options } from '../src'
 
+const readFs = (folderName: string, files: Record<string, string>) => {
+  mockfs.restore()
+  const tmpDir = path.join(os.tmpdir(), `esbuild/${folderName}`)
+  Object.keys(files).forEach((file) => {
+    const absolute = path.join(tmpDir, file)
+    fs.mkdirSync(path.dirname(absolute), { recursive: true })
+    fs.writeFileSync(absolute, files[file], 'utf8')
+  })
+  return tmpDir
+}
+
 const build = async (
   options?: Options,
-  { input = './fixture/index.js', sourcemap = false } = {}
+  {
+    input = './fixture/index.js',
+    sourcemap = false,
+    rollupPlugins = [],
+  }: {
+    input?: string | string[]
+    sourcemap?: boolean
+    rollupPlugins?: RollupPlugin[]
+  } = {}
 ) => {
-  const bundle = await rollup({
+  const build = await rollup({
     input,
-    plugins: [esbuild(options)],
+    plugins: [esbuild(options), ...rollupPlugins],
   })
-  const { output } = await bundle.generate({ format: 'esm', sourcemap })
+  const { output } = await build.generate({ format: 'esm', sourcemap })
   return output
 }
 
@@ -206,4 +228,81 @@ test('use custom tsconfig.json', async () => {
     export { foo };
     "
   `)
+})
+
+describe('bundle', () => {
+  test('simple', async () => {
+    const dir = readFs('bundle-simple', {
+      './fixture/bar.ts': `export const bar = 'bar'`,
+      './fixture/Foo.jsx': `
+       import {bar} from 'bar'
+        export const Foo = <div>foo {bar}</div>
+      `,
+      './fixture/entry-a.jsx': `
+      import {Foo} from './Foo'
+      export const A = () => <Foo>A</Foo>
+      `,
+      './fixture/entry-b.jsx': `
+      import {Foo} from './Foo'
+      export const B = () => <Foo>B</Foo>
+      `,
+    })
+    const output = await build(
+      { experimentalBundling: true },
+      {
+        input: [
+          path.join(dir, './fixture/entry-a.jsx'),
+          path.join(dir, './fixture/entry-b.jsx'),
+        ],
+        rollupPlugins: [
+          {
+            name: 'alias',
+            resolveId(source, importer) {
+              if (source === 'bar' && importer) {
+                return path.join(path.dirname(importer), 'bar.ts')
+              }
+            },
+          },
+        ],
+      }
+    )
+    expect(
+      output.map((o) => {
+        return {
+          code: o.type === 'chunk' ? o.code : o.source,
+          path: o.fileName,
+        }
+      })
+    ).toMatchInlineSnapshot(`
+      Array [
+        Object {
+          "code": "import { F as Foo } from './Foo-78fc0a48.js';
+
+      const A = () => /* @__PURE__ */ React.createElement(Foo, null, \\"A\\");
+
+      export { A };
+      ",
+          "path": "entry-a.js",
+        },
+        Object {
+          "code": "import { F as Foo } from './Foo-78fc0a48.js';
+
+      const B = () => /* @__PURE__ */ React.createElement(Foo, null, \\"B\\");
+
+      export { B };
+      ",
+          "path": "entry-b.js",
+        },
+        Object {
+          "code": "const bar = \\"bar\\";
+
+      const Foo = /* @__PURE__ */ React.createElement(\\"div\\", null, \\"foo \\", bar);
+
+      export { Foo as F };
+      ",
+          "path": "Foo-78fc0a48.js",
+        },
+      ]
+    `)
+  })
 })
