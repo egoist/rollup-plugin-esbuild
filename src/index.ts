@@ -128,7 +128,8 @@ export default (options: Options = {}): Plugin => {
     },
 
     async transform(code, id) {
-      if (!filter(id)) {
+      // In bundle mode transformation is handled by esbuild too
+      if (!filter(id) || options.experimentalBundling) {
         return null
       }
 
@@ -167,7 +168,12 @@ export default (options: Options = {}): Plugin => {
     },
 
     async renderChunk(code) {
-      if (options.minify || options.minifyWhitespace || options.minifyIdentifiers || options.minifySyntax) {
+      if (
+        options.minify ||
+        options.minifyWhitespace ||
+        options.minifyIdentifiers ||
+        options.minifySyntax
+      ) {
         const result = await transform(code, {
           loader: 'js',
           minify: options.minify,

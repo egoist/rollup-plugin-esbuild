@@ -43,6 +43,7 @@ export const bundle = async (
     bundle: true,
     write: false,
     sourcemap: true,
+    outdir: 'dist',
     plugins: [
       {
         name: 'rollup',
@@ -105,7 +106,6 @@ export const bundle = async (
                 contents: code,
               }
             }
-
             return {
               contents,
               loader,

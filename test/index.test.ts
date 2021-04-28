@@ -1,4 +1,3 @@
-import os from 'os'
 import path from 'path'
 import fs from 'fs'
 import { rollup, Plugin as RollupPlugin } from 'rollup'
@@ -7,7 +6,7 @@ import esbuild, { Options } from '../src'
 
 const readFs = (folderName: string, files: Record<string, string>) => {
   mockfs.restore()
-  const tmpDir = path.join(os.tmpdir(), `esbuild/${folderName}`)
+  const tmpDir = path.join(__dirname, '.temp', `esbuild/${folderName}`)
   Object.keys(files).forEach((file) => {
     const absolute = path.join(tmpDir, file)
     fs.mkdirSync(path.dirname(absolute), { recursive: true })
@@ -85,7 +84,7 @@ test('minify whitespace only', async () => {
   mockfs({
     './fixture/index.js': `
       console.log(1 === 1);
-    `
+    `,
   })
   const output = await build({ minifyWhitespace: true })
   expect(output[0].code).toMatchInlineSnapshot(`
@@ -98,7 +97,7 @@ test('minify syntax only', async () => {
   mockfs({
     './fixture/index.js': `
       console.log(1 === 1);
-    `
+    `,
   })
   const output = await build({ minifySyntax: true })
   expect(output[0].code).toMatchInlineSnapshot(`
@@ -276,31 +275,32 @@ describe('bundle', () => {
     ).toMatchInlineSnapshot(`
       Array [
         Object {
-          "code": "import { F as Foo } from './Foo-78fc0a48.js';
+          "code": "// test/.temp/esbuild/bundle-simple/fixture/bar.ts
+      var bar = \\"bar\\";
 
-      const A = () => /* @__PURE__ */ React.createElement(Foo, null, \\"A\\");
+      // test/.temp/esbuild/bundle-simple/fixture/Foo.jsx
+      var Foo = /* @__PURE__ */ React.createElement(\\"div\\", null, \\"foo \\", bar);
+
+      // test/.temp/esbuild/bundle-simple/fixture/entry-a.jsx
+      var A = () => /* @__PURE__ */ React.createElement(Foo, null, \\"A\\");
 
       export { A };
       ",
           "path": "entry-a.js",
         },
         Object {
-          "code": "import { F as Foo } from './Foo-78fc0a48.js';
+          "code": "// test/.temp/esbuild/bundle-simple/fixture/bar.ts
+      var bar = \\"bar\\";
 
-      const B = () => /* @__PURE__ */ React.createElement(Foo, null, \\"B\\");
+      // test/.temp/esbuild/bundle-simple/fixture/Foo.jsx
+      var Foo = /* @__PURE__ */ React.createElement(\\"div\\", null, \\"foo \\", bar);
+
+      // test/.temp/esbuild/bundle-simple/fixture/entry-b.jsx
+      var B = () => /* @__PURE__ */ React.createElement(Foo, null, \\"B\\");
 
       export { B };
       ",
           "path": "entry-b.js",
-        },
-        Object {
-          "code": "const bar = \\"bar\\";
-
-      const Foo = /* @__PURE__ */ React.createElement(\\"div\\", null, \\"foo \\", bar);
-
-      export { Foo as F };
-      ",
-          "path": "Foo-78fc0a48.js",
         },
       ]
     `)
