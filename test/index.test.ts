@@ -110,10 +110,10 @@ test('minify syntax only', async () => {
 test('legal comments none', async () => {
   mockfs({
     './fixture/index.js': `/** @preserve comment */
-    /*!
-     * comment
-     */
-    //! comment
+      /*!
+       * comment
+       */
+      //! comment
       console.log(1 === 1);
     `,
   })
