@@ -13,6 +13,8 @@ const defaultLoaders: { [ext: string]: Loader } = {
   '.tsx': 'tsx',
 }
 
+type ILegalComments = 'none' | 'inline' | 'eof' | 'linked' | 'external'
+
 export type Options = {
   include?: FilterPattern
   exclude?: FilterPattern
@@ -21,6 +23,7 @@ export type Options = {
   minifyWhitespace?: boolean
   minifyIdentifiers?: boolean
   minifySyntax?: boolean
+  legalComments?: ILegalComments
   target?: string | string[]
   jsxFactory?: string
   jsxFragment?: string
@@ -155,6 +158,7 @@ export default (options: Options = {}): Plugin => {
         define: options.define,
         sourcemap: options.sourceMap !== false,
         sourcefile: id,
+        legalComments: options.legalComments || 'inline',
       })
 
       await warn(this, result.warnings)

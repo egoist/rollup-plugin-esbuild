@@ -106,6 +106,24 @@ test('minify syntax only', async () => {
   `)
 })
 
+
+test('legal comments none', async () => {
+  mockfs({
+    './fixture/index.js': `/** @preserve comment */
+    /*!
+     * comment
+     */
+    //! comment
+      console.log(1 === 1);
+    `,
+  })
+  const output = await build({ minify: true, legalComments: 'none' })
+  expect(output[0].code).toMatchInlineSnapshot(`
+    "console.log(!0);
+    "
+  `)
+})
+
 test('load index.(x)', async () => {
   mockfs({
     './fixture/index.js': `
