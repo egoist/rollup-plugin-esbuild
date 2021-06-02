@@ -121,7 +121,7 @@ export default (options: Options = {}): Plugin => {
 
     async load(id) {
       if (options.experimentalBundling) {
-        const bundled = await bundle(id, this, plugins, loaders)
+        const bundled = await bundle(id, this, plugins, loaders, target)
         if (bundled.code) {
           return {
             code: bundled.code,
