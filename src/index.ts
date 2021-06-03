@@ -51,6 +51,7 @@ export type Options = {
   loaders?: {
     [ext: string]: Loader | false
   }
+  pure?: string[]
 }
 
 const warn = async (pluginContext: PluginContext, messages: Message[]) => {
@@ -167,6 +168,7 @@ export default (options: Options = {}): Plugin => {
         define: options.define,
         sourcemap: options.sourceMap !== false,
         sourcefile: id,
+        pure: options.pure,
         legalComments: options.legalComments,
       })
 
