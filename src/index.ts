@@ -1,7 +1,13 @@
 import { existsSync, statSync } from 'fs'
 import { extname, resolve, dirname, join } from 'path'
 import { Plugin, PluginContext } from 'rollup'
-import { transform, Loader, formatMessages, Message } from 'esbuild'
+import {
+  transform,
+  Loader,
+  formatMessages,
+  Message,
+  CommonOptions,
+} from 'esbuild'
 import { createFilter, FilterPattern } from '@rollup/pluginutils'
 import { getOptions } from './options'
 import { bundle } from './bundle'
@@ -13,8 +19,6 @@ const defaultLoaders: { [ext: string]: Loader } = {
   '.tsx': 'tsx',
 }
 
-type ILegalComments = 'none' | 'inline' | 'eof' | 'linked' | 'external'
-
 export type Options = {
   include?: FilterPattern
   exclude?: FilterPattern
@@ -23,7 +27,7 @@ export type Options = {
   minifyWhitespace?: boolean
   minifyIdentifiers?: boolean
   minifySyntax?: boolean
-  legalComments?: ILegalComments
+  legalComments?: CommonOptions['legalComments']
   target?: string | string[]
   jsxFactory?: string
   jsxFragment?: string
@@ -158,7 +162,7 @@ export default (options: Options = {}): Plugin => {
         define: options.define,
         sourcemap: options.sourceMap !== false,
         sourcefile: id,
-        legalComments: options.legalComments || 'inline',
+        legalComments: options.legalComments,
       })
 
       await warn(this, result.warnings)
