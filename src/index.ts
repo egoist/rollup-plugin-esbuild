@@ -1,7 +1,13 @@
 import { existsSync, statSync } from 'fs'
 import { extname, resolve, dirname, join } from 'path'
 import { Plugin, PluginContext } from 'rollup'
-import { transform, Loader, formatMessages, Message } from 'esbuild'
+import {
+  transform,
+  Loader,
+  formatMessages,
+  Message,
+  CommonOptions,
+} from 'esbuild'
 import { createFilter, FilterPattern } from '@rollup/pluginutils'
 import { getOptions } from './options'
 import { bundle } from './bundle'
@@ -21,7 +27,12 @@ export type Options = {
   minifyWhitespace?: boolean
   minifyIdentifiers?: boolean
   minifySyntax?: boolean
+  legalComments?: CommonOptions['legalComments']
   target?: string | string[]
+  /**
+   * Requires esbuild >= 0.12.1
+   */
+  jsx?: 'transform' | 'preserve'
   jsxFactory?: string
   jsxFragment?: string
   define?: {
@@ -118,7 +129,7 @@ export default (options: Options = {}): Plugin => {
 
     async load(id) {
       if (options.experimentalBundling) {
-        const bundled = await bundle(id, this, plugins, loaders)
+        const bundled = await bundle(id, this, plugins, loaders, target)
         if (bundled.code) {
           return {
             code: bundled.code,
@@ -151,12 +162,14 @@ export default (options: Options = {}): Plugin => {
       const result = await transform(code, {
         loader,
         target,
+        jsx: options.jsx,
         jsxFactory: options.jsxFactory || defaultOptions.jsxFactory,
         jsxFragment: options.jsxFragment || defaultOptions.jsxFragment,
         define: options.define,
         sourcemap: options.sourceMap !== false,
         sourcefile: id,
         pure: options.pure,
+        legalComments: options.legalComments,
       })
 
       await warn(this, result.warnings)

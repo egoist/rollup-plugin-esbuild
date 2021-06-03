@@ -9,7 +9,8 @@ export const bundle = async (
   plugins: Plugin[],
   loaders: {
     [ext: string]: string
-  }
+  },
+  target: string | string[]
 ) => {
   const transform = async (inputCode: string, id: string) => {
     let code: string | undefined
@@ -41,6 +42,7 @@ export const bundle = async (
   const result = await build({
     entryPoints: [id],
     format: 'esm',
+    target,
     bundle: true,
     write: false,
     sourcemap: true,
