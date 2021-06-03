@@ -30,6 +30,7 @@ export default {
       sourceMap: false, // default
       minify: process.env.NODE_ENV === 'production',
       target: 'es2017', // default, or 'es20XX', 'esnext'
+      jsx: 'transform', // default, or 'preserve'
       jsxFactory: 'React.createElement',
       jsxFragment: 'React.Fragment',
       // Like @rollup/plugin-replace
