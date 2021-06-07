@@ -22,7 +22,7 @@
     "esbuild": "^0.12.5",
     "jest": "^26.6.3",
     "mock-fs": "^4.14.0",
-    "prettier": "^2.3.0",
+    "prettier": "^2.3.1",
     "rollup": "^2.50.5",
     "rollup-plugin-dts": "^1.4.10",
     "ts-jest": "^26.5.6",
