@@ -1275,10 +1275,10 @@ error-ex@^1.3.1:
   dependencies:
     is-arrayish "^0.2.1"
 
-esbuild@^0.12.5:
-  version "0.12.5"
-  resolved "https://registry.yarnpkg.com/esbuild/-/esbuild-0.12.5.tgz#36076a6bc1966ba2741981d30512e95e8aaff495"
-  integrity sha512-vcuP53pA5XiwUU4FnlXM+2PnVjTfHGthM7uP1gtp+9yfheGvFFbq/KyuESThmtoHPUrfZH5JpxGVJIFDVD1Egw==
+esbuild@^0.12.17:
+  version "0.12.17"
+  resolved "https://registry.yarnpkg.com/esbuild/-/esbuild-0.12.17.tgz#5816f905c2905de0ebbc658860df7b5b48afbcd3"
+  integrity sha512-GshKJyVYUnlSXIZj/NheC2O0Kblh42CS7P1wJyTbbIHevTG4jYMS9NNw8EOd8dDWD0dzydYHS01MpZoUcQXB4g==
 
 escape-string-regexp@^1.0.5:
   version "1.0.5"
