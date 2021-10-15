@@ -80,6 +80,19 @@ test('minify', async () => {
   `)
 })
 
+test('keepNames', async () => {
+  mockfs({
+    './fixture/index.js': `
+      export default class Foo {}
+    `,
+  })
+  const output = await build({ minify: true, keepNames: true })
+  expect(output[0].code).toMatchInlineSnapshot(`
+    "class o{}export default o;
+    "
+  `)
+})
+
 test('minify whitespace only', async () => {
   mockfs({
     './fixture/index.js': `
@@ -105,7 +118,6 @@ test('minify syntax only', async () => {
     "
   `)
 })
-
 
 test('legal comments none', async () => {
   mockfs({

@@ -27,6 +27,7 @@ export type Options = {
   minifyWhitespace?: boolean
   minifyIdentifiers?: boolean
   minifySyntax?: boolean
+  keepNames?: boolean
   legalComments?: CommonOptions['legalComments']
   target?: string | string[]
   /**
