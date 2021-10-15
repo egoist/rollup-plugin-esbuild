@@ -88,7 +88,7 @@ test('keepNames', async () => {
   })
   const output = await build({ minify: true, keepNames: true })
   expect(output[0].code).toMatchInlineSnapshot(`
-    "class o{}export default o;
+    "var a=Object.defineProperty,t=(e,r)=>a(e,\\"name\\",{value:r,configurable:!0});class o{}t(o,\\"Foo\\");export default o;
     "
   `)
 })

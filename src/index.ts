@@ -171,6 +171,7 @@ export default (options: Options = {}): Plugin => {
         sourcefile: id,
         pure: options.pure,
         legalComments: options.legalComments,
+        keepNames: options.keepNames,
       })
 
       await warn(this, result.warnings)
