@@ -27,6 +27,7 @@ export type Options = {
   minifyWhitespace?: boolean
   minifyIdentifiers?: boolean
   minifySyntax?: boolean
+  keepNames?: boolean
   legalComments?: CommonOptions['legalComments']
   target?: string | string[]
   /**
@@ -170,6 +171,7 @@ export default (options: Options = {}): Plugin => {
         sourcefile: id,
         pure: options.pure,
         legalComments: options.legalComments,
+        keepNames: options.keepNames,
       })
 
       await warn(this, result.warnings)
