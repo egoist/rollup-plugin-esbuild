@@ -19,6 +19,12 @@ const defaultLoaders: { [ext: string]: Loader } = {
   '.tsx': 'tsx',
 }
 
+type Truthy<T> = T extends false | '' | 0 | null | undefined ? never : T // from lodash
+
+function truthy<T>(value: T): value is Truthy<T> {
+  return Boolean(value)
+}
+
 export type Options = {
   include?: FilterPattern
   exclude?: FilterPattern
@@ -124,7 +130,7 @@ export default (options: Options = {}): Plugin => {
     },
 
     options(options) {
-      plugins = options.plugins || []
+      plugins = (options.plugins || []).filter(truthy)
       return null
     },
 

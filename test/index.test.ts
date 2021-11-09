@@ -1,11 +1,9 @@
 import path from 'path'
 import fs from 'fs'
 import { rollup, Plugin as RollupPlugin } from 'rollup'
-import mockfs from 'mock-fs'
 import esbuild, { Options } from '../src'
 
-const readFs = (folderName: string, files: Record<string, string>) => {
-  mockfs.restore()
+const realFs = (folderName: string, files: Record<string, string>) => {
   const tmpDir = path.join(__dirname, '.temp', `esbuild/${folderName}`)
   Object.keys(files).forEach((file) => {
     const absolute = path.join(tmpDir, file)
@@ -15,28 +13,34 @@ const readFs = (folderName: string, files: Record<string, string>) => {
   return tmpDir
 }
 
+const getTestName = () => expect.getState().currentTestName
+
 const build = async (
   options?: Options,
   {
     input = './fixture/index.js',
     sourcemap = false,
     rollupPlugins = [],
+    dir = '.',
   }: {
     input?: string | string[]
     sourcemap?: boolean
     rollupPlugins?: RollupPlugin[]
+    dir?: string
   } = {}
 ) => {
   const build = await rollup({
-    input,
+    input: [...(Array.isArray(input) ? input : [input])].map((v) =>
+      path.resolve(dir, v)
+    ),
     plugins: [esbuild(options), ...rollupPlugins],
   })
   const { output } = await build.generate({ format: 'esm', sourcemap })
   return output
 }
 
-beforeAll(() => {
-  mockfs({
+test('simple', async () => {
+  const dir = realFs(getTestName(), {
     './fixture/index.js': `
       import Foo from './foo'
 
@@ -50,14 +54,7 @@ beforeAll(() => {
       }
     `,
   })
-})
-
-afterAll(() => {
-  mockfs.restore()
-})
-
-test('simple', async () => {
-  const output = await build()
+  const output = await build({}, { dir })
   expect(output[0].code).toMatchInlineSnapshot(`
     "class Foo {
       render() {
@@ -73,7 +70,21 @@ test('simple', async () => {
 })
 
 test('minify', async () => {
-  const output = await build({ minify: true })
+  const dir = realFs(getTestName(), {
+    './fixture/index.js': `
+      import Foo from './foo'
+
+      console.log(Foo)
+    `,
+    './fixture/foo.tsx': `
+      export default class Foo {
+        render() {
+          return <div className="hehe">hello there!!!</div>
+        }
+      }
+    `,
+  })
+  const output = await build({ minify: true }, { dir })
   expect(output[0].code).toMatchInlineSnapshot(`
     "class Foo{render(){return React.createElement(\\"div\\",{className:\\"hehe\\"},\\"hello there!!!\\")}}console.log(Foo);
     "
@@ -81,25 +92,25 @@ test('minify', async () => {
 })
 
 test('keepNames', async () => {
-  mockfs({
+  const dir = realFs(getTestName(), {
     './fixture/index.js': `
       export default class Foo {}
     `,
   })
-  const output = await build({ minify: true, keepNames: true })
+  const output = await build({ minify: true, keepNames: true }, { dir })
   expect(output[0].code).toMatchInlineSnapshot(`
-    "var a=Object.defineProperty,t=(e,r)=>a(e,\\"name\\",{value:r,configurable:!0});class o{}t(o,\\"Foo\\");export default o;
+    "var r=Object.defineProperty,t=(e,o)=>r(e,\\"name\\",{value:o,configurable:!0});class a{}t(a,\\"Foo\\");export{a as default};
     "
   `)
 })
 
 test('minify whitespace only', async () => {
-  mockfs({
+  const dir = realFs(getTestName(), {
     './fixture/index.js': `
       console.log(1 === 1);
     `,
   })
-  const output = await build({ minifyWhitespace: true })
+  const output = await build({ minifyWhitespace: true }, { dir })
   expect(output[0].code).toMatchInlineSnapshot(`
     "console.log(true);
     "
@@ -107,12 +118,12 @@ test('minify whitespace only', async () => {
 })
 
 test('minify syntax only', async () => {
-  mockfs({
+  const dir = realFs(getTestName(), {
     './fixture/index.js': `
       console.log(1 === 1);
     `,
   })
-  const output = await build({ minifySyntax: true })
+  const output = await build({ minifySyntax: true }, { dir })
   expect(output[0].code).toMatchInlineSnapshot(`
     "console.log(!0);
     "
@@ -120,7 +131,7 @@ test('minify syntax only', async () => {
 })
 
 test('legal comments none', async () => {
-  mockfs({
+  const dir = realFs(getTestName(), {
     './fixture/index.js': `/** @preserve comment */
       /*!
        * comment
@@ -129,7 +140,7 @@ test('legal comments none', async () => {
       console.log(1 === 1);
     `,
   })
-  const output = await build({ minify: true, legalComments: 'none' })
+  const output = await build({ minify: true, legalComments: 'none' }, { dir })
   expect(output[0].code).toMatchInlineSnapshot(`
     "console.log(!0);
     "
@@ -137,7 +148,7 @@ test('legal comments none', async () => {
 })
 
 test('load index.(x)', async () => {
-  mockfs({
+  const dir = realFs(getTestName(), {
     './fixture/index.js': `
       import Foo from './foo'
 
@@ -152,7 +163,7 @@ test('load index.(x)', async () => {
     `,
   })
 
-  const output = await build()
+  const output = await build({}, { dir })
   expect(output[0].code).toMatchInlineSnapshot(`
     "class Foo {
       render() {
@@ -168,7 +179,7 @@ test('load index.(x)', async () => {
 })
 
 test('load json', async () => {
-  mockfs({
+  const dir = realFs(getTestName(), {
     './fixture/index.js': `
       import * as foo from './foo'
 
@@ -181,11 +192,14 @@ test('load json', async () => {
     `,
   })
 
-  const output = await build({
-    loaders: {
-      '.json': 'json',
+  const output = await build(
+    {
+      loaders: {
+        '.json': 'json',
+      },
     },
-  })
+    { dir }
+  )
   // Following code is expected
   // esbuild doesn't emit json code as es module for now
   // So you will need @rollup/plugin-commonjs
@@ -204,7 +218,7 @@ test('load json', async () => {
 })
 
 test('use custom jsxFactory (h) from tsconfig', async () => {
-  mockfs({
+  const dir = realFs(getTestName(), {
     './fixture/index.jsx': `
       export const foo = <div>foo</div>
     `,
@@ -217,7 +231,7 @@ test('use custom jsxFactory (h) from tsconfig', async () => {
     `,
   })
 
-  const output = await build({}, { input: './fixture/index.jsx' })
+  const output = await build({}, { input: './fixture/index.jsx', dir })
   expect(output[0].code).toMatchInlineSnapshot(`
     "const foo = /* @__PURE__ */ h(\\"div\\", null, \\"foo\\");
 
@@ -227,7 +241,7 @@ test('use custom jsxFactory (h) from tsconfig', async () => {
 })
 
 test('use custom tsconfig.json', async () => {
-  mockfs({
+  const dir = realFs(getTestName(), {
     './fixture/index.jsx': `
       export const foo = <div>foo</div>
     `,
@@ -249,7 +263,7 @@ test('use custom tsconfig.json', async () => {
 
   const output = await build(
     { tsconfig: 'tsconfig.build.json' },
-    { input: './fixture/index.jsx' }
+    { input: './fixture/index.jsx', dir }
   )
   expect(output[0].code).toMatchInlineSnapshot(`
     "const foo = /* @__PURE__ */ custom(\\"div\\", null, \\"foo\\");
@@ -261,7 +275,7 @@ test('use custom tsconfig.json', async () => {
 
 describe('bundle', () => {
   test('simple', async () => {
-    const dir = readFs('bundle-simple', {
+    const dir = realFs(getTestName(), {
       './fixture/bar.ts': `export const bar = 'bar'`,
       './fixture/Foo.jsx': `
        import {bar} from 'bar'
@@ -305,13 +319,13 @@ describe('bundle', () => {
     ).toMatchInlineSnapshot(`
       Array [
         Object {
-          "code": "// test/.temp/esbuild/bundle-simple/fixture/bar.ts
+          "code": "// test/.temp/esbuild/bundle simple/fixture/bar.ts
       var bar = \\"bar\\";
 
-      // test/.temp/esbuild/bundle-simple/fixture/Foo.jsx
+      // test/.temp/esbuild/bundle simple/fixture/Foo.jsx
       var Foo = /* @__PURE__ */ React.createElement(\\"div\\", null, \\"foo \\", bar);
 
-      // test/.temp/esbuild/bundle-simple/fixture/entry-a.jsx
+      // test/.temp/esbuild/bundle simple/fixture/entry-a.jsx
       var A = () => /* @__PURE__ */ React.createElement(Foo, null, \\"A\\");
 
       export { A };
@@ -319,13 +333,13 @@ describe('bundle', () => {
           "path": "entry-a.js",
         },
         Object {
-          "code": "// test/.temp/esbuild/bundle-simple/fixture/bar.ts
+          "code": "// test/.temp/esbuild/bundle simple/fixture/bar.ts
       var bar = \\"bar\\";
 
-      // test/.temp/esbuild/bundle-simple/fixture/Foo.jsx
+      // test/.temp/esbuild/bundle simple/fixture/Foo.jsx
       var Foo = /* @__PURE__ */ React.createElement(\\"div\\", null, \\"foo \\", bar);
 
-      // test/.temp/esbuild/bundle-simple/fixture/entry-b.jsx
+      // test/.temp/esbuild/bundle simple/fixture/entry-b.jsx
       var B = () => /* @__PURE__ */ React.createElement(Foo, null, \\"B\\");
 
       export { B };
