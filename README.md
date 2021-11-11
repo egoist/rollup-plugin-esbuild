@@ -89,6 +89,11 @@ To enable this mode, passing `experimentalBundling: true` to the options.
 
 Current limitation: no code splitting yet.
 
+## Sponsors
+
+[![sponsors](https://sponsors-images.egoist.sh/sponsors.svg)](https://github.com/sponsors/egoist)
+
+
 ## License
 
 MIT &copy; [EGOIST (Kevin Titor)](https://github.com/sponsors/egoist)
