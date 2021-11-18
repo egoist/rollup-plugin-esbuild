@@ -1,16 +1,26 @@
 import { existsSync, statSync } from 'fs'
 import { extname, resolve, dirname, join } from 'path'
-import { Plugin, PluginContext } from 'rollup'
+import { Plugin, PluginContext, InternalModuleFormat } from 'rollup'
 import {
   transform,
   Loader,
   formatMessages,
   Message,
   CommonOptions,
+  Format,
 } from 'esbuild'
 import { createFilter, FilterPattern } from '@rollup/pluginutils'
 import { getOptions } from './options'
 import { bundle } from './bundle'
+
+const getEsbuildFormat = (rollupFormat: InternalModuleFormat): Format | undefined => {
+  if (rollupFormat === 'es') {
+    return 'esm';
+  }
+  if (rollupFormat === 'cjs' || rollupFormat === 'iife') {
+    return rollupFormat;
+  }
+}
 
 const defaultLoaders: { [ext: string]: Loader } = {
   '.js': 'js',
@@ -190,14 +200,16 @@ export default (options: Options = {}): Plugin => {
       )
     },
 
-    async renderChunk(code) {
+    async renderChunk(code, _, rollupOptions) {
       if (
         options.minify ||
         options.minifyWhitespace ||
         options.minifyIdentifiers ||
         options.minifySyntax
       ) {
+        const format = getEsbuildFormat(rollupOptions.format);
         const result = await transform(code, {
+          format,
           loader: 'js',
           minify: options.minify,
           minifyWhitespace: options.minifyWhitespace,
