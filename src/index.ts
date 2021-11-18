@@ -1,26 +1,14 @@
 import { existsSync, statSync } from 'fs'
 import { extname, resolve, dirname, join } from 'path'
-import { Plugin, PluginContext, InternalModuleFormat } from 'rollup'
-import {
-  transform,
-  Loader,
-  formatMessages,
-  Message,
-  CommonOptions,
-  Format,
-} from 'esbuild'
+import { Plugin } from 'rollup'
+import { transform, Loader, CommonOptions } from 'esbuild'
 import { createFilter, FilterPattern } from '@rollup/pluginutils'
 import { getOptions } from './options'
 import { bundle } from './bundle'
+import { minify, getRenderChunk } from './minify'
+import { warn } from './warn'
 
-const getEsbuildFormat = (rollupFormat: InternalModuleFormat): Format | undefined => {
-  if (rollupFormat === 'es') {
-    return 'esm';
-  }
-  if (rollupFormat === 'cjs' || rollupFormat === 'iife') {
-    return rollupFormat;
-  }
-}
+export { minify }
 
 const defaultLoaders: { [ext: string]: Loader } = {
   '.js': 'js',
@@ -69,16 +57,6 @@ export type Options = {
     [ext: string]: Loader | false
   }
   pure?: string[]
-}
-
-const warn = async (pluginContext: PluginContext, messages: Message[]) => {
-  if (messages.length > 0) {
-    const warnings = await formatMessages(messages, {
-      kind: 'warning',
-      color: true,
-    })
-    warnings.forEach((warning) => pluginContext.warn(warning))
-  }
 }
 
 export default (options: Options = {}): Plugin => {
@@ -187,7 +165,6 @@ export default (options: Options = {}): Plugin => {
         sourcefile: id,
         pure: options.pure,
         legalComments: options.legalComments,
-        keepNames: options.keepNames,
       })
 
       await warn(this, result.warnings)
@@ -200,33 +177,6 @@ export default (options: Options = {}): Plugin => {
       )
     },
 
-    async renderChunk(code, _, rollupOptions) {
-      if (
-        options.minify ||
-        options.minifyWhitespace ||
-        options.minifyIdentifiers ||
-        options.minifySyntax
-      ) {
-        const format = getEsbuildFormat(rollupOptions.format);
-        const result = await transform(code, {
-          format,
-          loader: 'js',
-          minify: options.minify,
-          minifyWhitespace: options.minifyWhitespace,
-          minifyIdentifiers: options.minifyIdentifiers,
-          minifySyntax: options.minifySyntax,
-          target,
-          sourcemap: options.sourceMap !== false,
-        })
-        await warn(this, result.warnings)
-        if (result.code) {
-          return {
-            code: result.code,
-            map: result.map || null,
-          }
-        }
-      }
-      return null
-    },
+    renderChunk: getRenderChunk(options),
   }
 }
