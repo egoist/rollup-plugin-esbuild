@@ -81,6 +81,18 @@ export default {
 }
 ```
 
+### Standalone Minify Plugin
+
+If you only want to use this plugin to minify your bundle:
+
+```js
+import { minify } from 'rollup-plugin-esbuild'
+
+export default {
+  plugins: [minify()],
+}
+```
+
 ### Bundle mode
 
 This plugin also includes an experimental `bundle` mode which lets rollup `resolve`, `load`, and `transform` imported files but leaves bundling to esbuild. In my simple test it's around 50% faster than non-bundle mode, but still 10x slower than raw esbuild.
@@ -92,7 +104,6 @@ Current limitation: no code splitting yet.
 ## Sponsors
 
 [![sponsors](https://sponsors-images.egoist.sh/sponsors.svg)](https://github.com/sponsors/egoist)
-
 
 ## License
 
