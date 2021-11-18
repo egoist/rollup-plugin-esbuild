@@ -8,7 +8,7 @@ const getEsbuildFormat = (
   if (rollupFormat === 'es') {
     return 'esm'
   }
-  if (rollupFormat === 'cjs' || rollupFormat === 'iife') {
+  if (rollupFormat === 'cjs') {
     return rollupFormat
   }
 }

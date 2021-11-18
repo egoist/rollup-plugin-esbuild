@@ -156,6 +156,7 @@ describe('esbuild plugin', () => {
       './fixture/index.js': `
       const minifyMe = true
       console.log(minifyMe);
+      export {minifyMe}
       `,
     })
     const output = await build({
@@ -164,7 +165,7 @@ describe('esbuild plugin', () => {
       format: 'commonjs',
     })
     expect(output[0].code).toMatchInlineSnapshot(`
-      "\\"use strict\\";const e=!0;console.log(e);
+      "\\"use strict\\";Object.defineProperty(exports,\\"__esModule\\",{value:!0});const e=!0;console.log(e),exports.minifyMe=e;
       "
     `)
   })
@@ -182,7 +183,7 @@ describe('esbuild plugin', () => {
       format: 'iife',
     })
     expect(output[0].code).toMatchInlineSnapshot(`
-      "(()=>{(function(){\\"use strict\\";console.log(!0)})();})();
+      "(function(){\\"use strict\\";console.log(!0)})();
       "
     `)
   })
