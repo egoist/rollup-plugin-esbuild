@@ -1,6 +1,6 @@
 import path from 'path'
 import fs from 'fs'
-import { rollup, Plugin as RollupPlugin } from 'rollup'
+import { rollup, Plugin as RollupPlugin, ModuleFormat } from 'rollup'
 import esbuild, { Options } from '../src'
 
 const realFs = (folderName: string, files: Record<string, string>) => {
@@ -22,11 +22,13 @@ const build = async (
     sourcemap = false,
     rollupPlugins = [],
     dir = '.',
+    format = 'esm',
   }: {
     input?: string | string[]
     sourcemap?: boolean
     rollupPlugins?: RollupPlugin[]
     dir?: string
+    format?: ModuleFormat
   } = {}
 ) => {
   const build = await rollup({
@@ -35,7 +37,7 @@ const build = async (
     ),
     plugins: [esbuild(options), ...rollupPlugins],
   })
-  const { output } = await build.generate({ format: 'esm', sourcemap })
+  const { output } = await build.generate({ format, sourcemap })
   return output
 }
 
@@ -86,7 +88,7 @@ test('minify', async () => {
   })
   const output = await build({ minify: true }, { dir })
   expect(output[0].code).toMatchInlineSnapshot(`
-    "class Foo{render(){return React.createElement(\\"div\\",{className:\\"hehe\\"},\\"hello there!!!\\")}}console.log(Foo);
+    "class e{render(){return React.createElement(\\"div\\",{className:\\"hehe\\"},\\"hello there!!!\\")}}console.log(e);
     "
   `)
 })
@@ -126,6 +128,66 @@ test('minify syntax only', async () => {
   const output = await build({ minifySyntax: true }, { dir })
   expect(output[0].code).toMatchInlineSnapshot(`
     "console.log(!0);
+    "
+  `)
+})
+
+test('minify cjs', async () => {
+  const dir = realFs(getTestName(), {
+    './fixture/index.js': `
+		const minifyMe = true
+		console.log(minifyMe);
+	  `,
+  })
+  const output = await build(
+    { minify: true },
+    {
+      dir,
+      format: 'commonjs',
+    }
+  )
+  expect(output[0].code).toMatchInlineSnapshot(`
+    "\\"use strict\\";const e=!0;console.log(e);
+    "
+  `)
+})
+
+test('minify iife', async () => {
+  const dir = realFs(getTestName(), {
+    './fixture/index.js': `
+		const minifyMe = true
+		console.log(minifyMe);
+	  `,
+  })
+  const output = await build(
+    { minify: true },
+    {
+      dir,
+      format: 'iife',
+    }
+  )
+  expect(output[0].code).toMatchInlineSnapshot(`
+    "(()=>{(function(){\\"use strict\\";console.log(!0)})();})();
+    "
+  `)
+})
+
+test('minify umd', async () => {
+  const dir = realFs(getTestName(), {
+    './fixture/index.js': `
+		const minifyMe = true
+		console.log(minifyMe);
+	  `,
+  })
+  const output = await build(
+    { minify: true },
+    {
+      dir,
+      format: 'umd',
+    }
+  )
+  expect(output[0].code).toMatchInlineSnapshot(`
+    "(function(n){typeof define==\\"function\\"&&define.amd?define(n):n()})(function(){\\"use strict\\";console.log(!0)});
     "
   `)
 })
