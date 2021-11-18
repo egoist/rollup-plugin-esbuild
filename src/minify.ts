@@ -1,17 +1,15 @@
 import { Plugin, InternalModuleFormat, RenderChunkHook } from 'rollup'
-import {
-  transform,
-  CommonOptions,
-  Format,
-} from 'esbuild'
+import { transform, CommonOptions, Format } from 'esbuild'
 import { warn } from './warn'
 
-const getEsbuildFormat = (rollupFormat: InternalModuleFormat): Format | undefined => {
+const getEsbuildFormat = (
+  rollupFormat: InternalModuleFormat
+): Format | undefined => {
   if (rollupFormat === 'es') {
-    return 'esm';
+    return 'esm'
   }
   if (rollupFormat === 'cjs' || rollupFormat === 'iife') {
-    return rollupFormat;
+    return rollupFormat
   }
 }
 
@@ -25,43 +23,44 @@ export type Options = {
   legalComments?: CommonOptions['legalComments']
 }
 
-export const getRenderChunk = (options: Options): RenderChunkHook => async function (code, _, rollupOptions) {
-	if (
-        options.minify ||
-        options.minifyWhitespace ||
-        options.minifyIdentifiers ||
-        options.minifySyntax
-      ) {
-        const format = getEsbuildFormat(rollupOptions.format);
-        const result = await transform(code, {
-          format,
-          loader: 'js',
-          minify: options.minify,
-          minifyWhitespace: options.minifyWhitespace,
-          minifyIdentifiers: options.minifyIdentifiers,
-          minifySyntax: options.minifySyntax,
-		  keepNames: options.keepNames,
-		  legalComments: options.legalComments,
-          sourcemap: options.sourceMap !== false,
-        })
-        await warn(this, result.warnings)
-        if (result.code) {
-          return {
-            code: result.code,
-            map: result.map || null,
-          }
+export const getRenderChunk = (options: Options): RenderChunkHook =>
+  async function (code, _, rollupOptions) {
+    if (
+      options.minify ||
+      options.minifyWhitespace ||
+      options.minifyIdentifiers ||
+      options.minifySyntax
+    ) {
+      const format = getEsbuildFormat(rollupOptions.format)
+      const result = await transform(code, {
+        format,
+        loader: 'js',
+        minify: options.minify,
+        minifyWhitespace: options.minifyWhitespace,
+        minifyIdentifiers: options.minifyIdentifiers,
+        minifySyntax: options.minifySyntax,
+        keepNames: options.keepNames,
+        legalComments: options.legalComments,
+        sourcemap: options.sourceMap !== false,
+      })
+      await warn(this, result.warnings)
+      if (result.code) {
+        return {
+          code: result.code,
+          map: result.map || null,
         }
       }
-      return null
-}
+    }
+    return null
+  }
 
-export default (options: Options = {}): Plugin => {
+export const minify = (options: Options = {}): Plugin => {
   return {
     name: 'esbuild-minify',
 
     renderChunk: getRenderChunk({
-		minify: true,
-		...options,
-	}),
+      minify: true,
+      ...options,
+    }),
   }
 }

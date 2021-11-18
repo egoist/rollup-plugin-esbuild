@@ -1,18 +1,14 @@
 import { existsSync, statSync } from 'fs'
 import { extname, resolve, dirname, join } from 'path'
 import { Plugin } from 'rollup'
-import {
-  transform,
-  Loader,
-  CommonOptions,
-} from 'esbuild'
+import { transform, Loader, CommonOptions } from 'esbuild'
 import { createFilter, FilterPattern } from '@rollup/pluginutils'
 import { getOptions } from './options'
 import { bundle } from './bundle'
-import { getRenderChunk } from './minify';
-import { warn } from './warn';
+import { minify, getRenderChunk } from './minify'
+import { warn } from './warn'
 
-export { default as minify } from './minify';
+export { minify }
 
 const defaultLoaders: { [ext: string]: Loader } = {
   '.js': 'js',
