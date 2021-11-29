@@ -21,6 +21,7 @@ export type Options = {
   minifySyntax?: boolean
   keepNames?: boolean
   legalComments?: CommonOptions['legalComments']
+  target?: CommonOptions['target']
 }
 
 export const getRenderChunk = (options: Options): RenderChunkHook =>
@@ -42,6 +43,7 @@ export const getRenderChunk = (options: Options): RenderChunkHook =>
         keepNames: options.keepNames,
         legalComments: options.legalComments,
         sourcemap: options.sourceMap !== false,
+        target: options.target,
       })
       await warn(this, result.warnings)
       if (result.code) {
