@@ -398,6 +398,24 @@ describe('minify plugin', () => {
       "
     `)
   })
+
+  test('minify with target option', async () => {
+    const dir = realFs(getTestName(), {
+      './fixture/index.js': `
+      const a = !!''.toString
+      const b = a ?? 2
+      console.log(b)
+      `,
+    })
+    const output = await build({
+      dir,
+      rollupPlugins: [minify({ target: 'chrome58' })],
+    })
+    expect(output[0].code).toMatchInlineSnapshot(`
+      "const o=!!\\"\\".toString,n=o!=null?o:2;console.log(n);
+      "
+    `)
+  })
 })
 
 describe('bundle', () => {
