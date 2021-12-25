@@ -1,10 +1,15 @@
 import { existsSync, statSync } from 'fs'
 import { extname, resolve, dirname, join } from 'path'
-import { Plugin } from 'rollup'
-import { transform, Loader, CommonOptions } from 'esbuild'
+import { Plugin as RollupPlugin } from 'rollup'
+import {
+  transform,
+  Loader,
+  CommonOptions,
+  Plugin as EsbuildPlugin,
+} from 'esbuild'
 import { createFilter, FilterPattern } from '@rollup/pluginutils'
 import { getOptions } from './options'
-import { bundle } from './bundle'
+import { Bundled, bundleWithEsbuild } from './bundle'
 import { minify, getRenderChunk } from './minify'
 import { warn } from './warn'
 
@@ -15,12 +20,6 @@ const defaultLoaders: { [ext: string]: Loader } = {
   '.jsx': 'jsx',
   '.ts': 'ts',
   '.tsx': 'tsx',
-}
-
-type Truthy<T> = T extends false | '' | 0 | null | undefined ? never : T // from lodash
-
-function truthy<T>(value: T): value is Truthy<T> {
-  return Boolean(value)
 }
 
 export type Options = {
@@ -43,7 +42,13 @@ export type Options = {
   define?: {
     [k: string]: string
   }
-  experimentalBundling?: boolean
+  experimentalBundling?: {
+    filter:
+      | (string | RegExp)[]
+      | ((id: string, importer: string | undefined) => boolean)
+    esbuildPlugins?: EsbuildPlugin[]
+    rollupPlugins?: RollupPlugin[]
+  }
   /**
    * Use this tsconfig file instead
    * Disable it by setting to `false`
@@ -59,7 +64,7 @@ export type Options = {
   pure?: string[]
 }
 
-export default (options: Options = {}): Plugin => {
+export default (options: Options = {}): RollupPlugin => {
   let target: string | string[]
 
   const loaders = {
@@ -96,16 +101,51 @@ export default (options: Options = {}): Plugin => {
     return null
   }
 
-  let plugins: Plugin[] = []
+  const experimentalBundling = options.experimentalBundling
+  const bundleCache: Map<string, Bundled> = new Map()
+
+  const enabledExperimentalBundling = (
+    id: string,
+    importer: string | undefined
+  ) => {
+    if (!experimentalBundling) return
+    if (Array.isArray(experimentalBundling.filter)) {
+      return experimentalBundling.filter.some((pattern) =>
+        typeof pattern === 'string' ? pattern === id : pattern.test(id)
+      )
+    }
+    if (typeof experimentalBundling.filter === 'function') {
+      return experimentalBundling.filter(id, importer)
+    }
+  }
 
   return {
     name: 'esbuild',
 
-    resolveId(importee, importer) {
-      if (importer && importee[0] === '.') {
+    buildStart() {
+      bundleCache.clear()
+    },
+
+    async resolveId(id, importer) {
+      if (enabledExperimentalBundling(id, importer)) {
+        const bundled = await bundleWithEsbuild(id, {
+          cwd: importer ? dirname(importer) : process.cwd(),
+          loaders,
+          target,
+          esbuildPlugins: experimentalBundling?.esbuildPlugins,
+          rollupPlugins: experimentalBundling?.rollupPlugins,
+          rollupPluginContext: this,
+        })
+        if (bundled) {
+          bundleCache.set(bundled.id, bundled)
+          return bundled.id
+        }
+      }
+
+      if (importer && id[0] === '.') {
         const resolved = resolve(
           importer ? dirname(importer) : process.cwd(),
-          importee
+          id
         )
 
         let file = resolveFile(resolved)
@@ -117,26 +157,19 @@ export default (options: Options = {}): Plugin => {
       }
     },
 
-    options(options) {
-      plugins = (options.plugins || []).filter(truthy)
-      return null
-    },
-
-    async load(id) {
-      if (options.experimentalBundling) {
-        const bundled = await bundle(id, this, plugins, loaders, target)
-        if (bundled.code) {
-          return {
-            code: bundled.code,
-            map: bundled.map,
-          }
+    load(id) {
+      if (bundleCache.has(id)) {
+        const bundled = bundleCache.get(id)!
+        return {
+          code: bundled.code,
+          map: bundled.map,
         }
       }
     },
 
     async transform(code, id) {
       // In bundle mode transformation is handled by esbuild too
-      if (!filter(id) || options.experimentalBundling) {
+      if (!filter(id) || bundleCache.has(id)) {
         return null
       }
 

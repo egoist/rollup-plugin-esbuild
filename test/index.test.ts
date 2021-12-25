@@ -441,15 +441,21 @@ describe('bundle', () => {
         path.join(dir, './fixture/entry-b.jsx'),
       ],
       rollupPlugins: [
-        esbuild({ experimentalBundling: true }),
-        {
-          name: 'alias',
-          resolveId(source, importer) {
-            if (source === 'bar' && importer) {
-              return path.join(path.dirname(importer), 'bar.ts')
-            }
+        esbuild({
+          experimentalBundling: {
+            filter: () => true,
+            rollupPlugins: [
+              {
+                name: 'alias',
+                resolveId(source, importer) {
+                  if (source === 'bar' && importer) {
+                    return path.join(path.dirname(importer), 'bar.ts')
+                  }
+                },
+              },
+            ],
           },
-        },
+        }),
       ],
     })
     expect(
