@@ -2,9 +2,9 @@ name: Node.js CI
 
 on:
   push:
-    branches: [master]
+    branches: [main, dev]
   pull_request:
-    branches: [master]
+    branches: [dev]
 
 jobs:
   test:
@@ -47,7 +47,7 @@ jobs:
         run: npm run test
 
       - name: Release
-        run: pnpx -y semantic-release --branches master
+        run: pnpx -y semantic-release
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
