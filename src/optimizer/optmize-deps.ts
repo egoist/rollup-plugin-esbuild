@@ -41,13 +41,18 @@ export const optimizeDeps = async (
         name: 'optimize-deps',
         async setup(build) {
           build.onResolve({ filter: /.*/ }, async (args) => {
-            if (args.pluginData?.__skip) return
+            if (args.pluginData?.__resolving_dep_path__) {
+              return // use default resolve algorithm
+            }
             if (options.include.includes(args.path)) {
               const resolved = await build.resolve(args.path, {
                 resolveDir: args.resolveDir,
                 kind: 'import-statement',
-                pluginData: { __skip: true },
+                pluginData: { __resolving_dep_path__: true },
               })
+              if (resolved.errors.length > 0 || resolved.warnings.length > 0) {
+                return resolved
+              }
               return {
                 path: args.path,
                 namespace: 'optimize-deps',
