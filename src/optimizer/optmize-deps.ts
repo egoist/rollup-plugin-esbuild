@@ -5,6 +5,7 @@ import esModuleLexer from 'es-module-lexer'
 
 export type OptimizeDepsOptions = {
   include: string[]
+  exclude?: string[]
   cwd: string
   esbuildOptions?: EsbuildOptions
   sourceMap: boolean
@@ -41,6 +42,11 @@ export const optimizeDeps = async (
         name: 'optimize-deps',
         async setup(build) {
           build.onResolve({ filter: /.*/ }, async (args) => {
+            if (options.exclude?.includes(args.path)) {
+              return {
+                external: true,
+              }
+            }
             if (args.pluginData?.__resolving_dep_path__) {
               return // use default resolve algorithm
             }
