@@ -1,3 +1,7 @@
 import Foo from './foo'
+import * as Vue from 'vue'
+import React from 'react'
+import * as Three from 'three'
+import * as _ from 'lodash'
 
-console.log(Foo)
+export { Foo, Vue, React, Three, _ }

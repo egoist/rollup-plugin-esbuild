@@ -57,12 +57,19 @@ export const getRenderChunk = (options: Options): RenderChunkHook =>
   }
 
 export const minify = (options: Options = {}): Plugin => {
+  let sourceMap = false
   return {
     name: 'esbuild-minify',
+
+    outputOptions({ sourcemap }) {
+      sourceMap = options.sourceMap ?? !!sourcemap
+      return null
+    },
 
     renderChunk: getRenderChunk({
       minify: true,
       ...options,
+      sourceMap,
     }),
   }
 }

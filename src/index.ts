@@ -1,19 +1,22 @@
 import { existsSync, statSync } from 'fs'
 import { extname, resolve, dirname, join } from 'path'
 import { Plugin as RollupPlugin } from 'rollup'
-import {
-  transform,
-  Loader,
-  CommonOptions,
-  Plugin as EsbuildPlugin,
-} from 'esbuild'
+import { transform, Loader, CommonOptions } from 'esbuild'
+import { MarkOptional } from 'ts-essentials'
 import { createFilter, FilterPattern } from '@rollup/pluginutils'
+import createDebug from 'debug'
 import { getOptions } from './options'
-import { Bundled, bundleWithEsbuild } from './bundle'
 import { minify, getRenderChunk } from './minify'
 import { warn } from './warn'
+import {
+  optimizeDeps,
+  OptimizeDepsOptions,
+  OptimizeDepsResult,
+} from './optimizer/optmize-deps'
 
 export { minify }
+
+const debugOptimizeDeps = createDebug('rpe:optimize-deps')
 
 const defaultLoaders: { [ext: string]: Loader } = {
   '.js': 'js',
@@ -42,13 +45,7 @@ export type Options = {
   define?: {
     [k: string]: string
   }
-  experimentalBundling?: {
-    filter:
-      | (string | RegExp)[]
-      | ((id: string, importer: string | undefined) => boolean)
-    esbuildPlugins?: EsbuildPlugin[]
-    rollupPlugins?: RollupPlugin[]
-  }
+  optimizeDeps?: MarkOptional<OptimizeDepsOptions, 'cwd' | 'sourceMap'>
   /**
    * Use this tsconfig file instead
    * Disable it by setting to `false`
@@ -101,45 +98,42 @@ export default (options: Options = {}): RollupPlugin => {
     return null
   }
 
-  const experimentalBundling = options.experimentalBundling
-  const bundleCache: Map<string, Bundled> = new Map()
-
-  const enabledExperimentalBundling = (
-    id: string,
-    importer: string | undefined
-  ) => {
-    if (!experimentalBundling) return
-    if (Array.isArray(experimentalBundling.filter)) {
-      return experimentalBundling.filter.some((pattern) =>
-        typeof pattern === 'string' ? pattern === id : pattern.test(id)
-      )
-    }
-    if (typeof experimentalBundling.filter === 'function') {
-      return experimentalBundling.filter(id, importer)
-    }
-  }
+  let optimizeDepsResult: OptimizeDepsResult | undefined
+  let cwd = process.cwd()
+  let sourceMap = false
 
   return {
     name: 'esbuild',
 
-    buildStart() {
-      bundleCache.clear()
+    options({ context }) {
+      if (context) {
+        cwd = context
+        options
+      }
+      return null
+    },
+    outputOptions({ sourcemap }) {
+      sourceMap = options.sourceMap ?? !!sourcemap
+      return null
+    },
+
+    async buildStart() {
+      if (!options.optimizeDeps || optimizeDepsResult) return
+
+      optimizeDepsResult = await optimizeDeps({
+        cwd,
+        sourceMap,
+        ...options.optimizeDeps,
+      })
+
+      debugOptimizeDeps('optimized %O', optimizeDepsResult.optimized)
     },
 
     async resolveId(id, importer) {
-      if (enabledExperimentalBundling(id, importer)) {
-        const bundled = await bundleWithEsbuild(id, {
-          cwd: importer ? dirname(importer) : process.cwd(),
-          loaders,
-          target,
-          esbuildPlugins: experimentalBundling?.esbuildPlugins,
-          rollupPlugins: experimentalBundling?.rollupPlugins,
-          rollupPluginContext: this,
-        })
-        if (bundled) {
-          bundleCache.set(bundled.id, bundled)
-          return bundled.id
-        }
+      if (optimizeDepsResult?.optimized.has(id)) {
+        const m = optimizeDepsResult.optimized.get(id)!
+        debugOptimizeDeps('resolved %s to %s', id, m.file)
+        return m.file
       }
 
       if (importer && id[0] === '.') {
@@ -157,19 +151,8 @@ export default (options: Options = {}): RollupPlugin => {
       }
     },
 
-    load(id) {
-      if (bundleCache.has(id)) {
-        const bundled = bundleCache.get(id)!
-        return {
-          code: bundled.code,
-          map: bundled.map,
-        }
-      }
-    },
-
     async transform(code, id) {
-      // In bundle mode transformation is handled by esbuild too
-      if (!filter(id) || bundleCache.has(id)) {
+      if (!filter(id) || optimizeDepsResult?.optimized.has(id)) {
         return null
       }
 
@@ -194,7 +177,7 @@ export default (options: Options = {}): RollupPlugin => {
         jsxFactory: options.jsxFactory || defaultOptions.jsxFactory,
         jsxFragment: options.jsxFragment || defaultOptions.jsxFragment,
         define: options.define,
-        sourcemap: options.sourceMap !== false,
+        sourcemap: sourceMap,
         sourcefile: id,
         pure: options.pure,
         legalComments: options.legalComments,
@@ -210,6 +193,9 @@ export default (options: Options = {}): RollupPlugin => {
       )
     },
 
-    renderChunk: getRenderChunk(options),
+    renderChunk: getRenderChunk({
+      ...options,
+      sourceMap,
+    }),
   }
 }

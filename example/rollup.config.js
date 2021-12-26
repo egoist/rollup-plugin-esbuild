@@ -1,14 +1,25 @@
+import path from 'path'
+import nodeResolve from '@rollup/plugin-node-resolve'
+import cjs from '@rollup/plugin-commonjs'
+
+// @ts-check
 const esbuild = require('../dist/index')
+const optimize = !!process.env.OPTIMIZE
 
 export default {
-  input: 'example/index.js',
+  input: path.join(__dirname, 'index.js'),
   output: {
-    file: 'example/dist/index.js',
+    dir: path.join(__dirname, 'dist'),
     format: 'cjs',
   },
   plugins: [
-    esbuild({
-      minify: !isDev,
+    esbuild.default({
+      minify: process.env.NODE_ENV === 'production',
+      optimizeDeps: {
+        include: optimize ? ['vue', 'react', 'three', 'lodash'] : [],
+      },
     }),
+    !optimize && cjs(),
+    !optimize && nodeResolve(),
   ],
 }

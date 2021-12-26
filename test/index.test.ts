@@ -418,84 +418,22 @@ describe('minify plugin', () => {
   })
 })
 
-describe('bundle', () => {
+describe('optimizeDeps', () => {
   test('simple', async () => {
     const dir = realFs(getTestName(), {
-      './fixture/bar.ts': `export const bar = 'bar'`,
-      './fixture/Foo.jsx': `
-       import {bar} from 'bar'
-        export const Foo = <div>foo {bar}</div>
-      `,
-      './fixture/entry-a.jsx': `
-      import {Foo} from './Foo'
-      export const A = () => <Foo>A</Foo>
-      `,
-      './fixture/entry-b.jsx': `
-      import {Foo} from './Foo'
-      export const B = () => <Foo>B</Foo>
-      `,
+      './index.ts': `import React from 'react';import * as Vue from 'vue';export {React,Vue}`,
     })
     const output = await build({
-      input: [
-        path.join(dir, './fixture/entry-a.jsx'),
-        path.join(dir, './fixture/entry-b.jsx'),
-      ],
+      input: [path.join(dir, './index.ts')],
       rollupPlugins: [
         esbuild({
-          experimentalBundling: {
-            filter: () => true,
-            rollupPlugins: [
-              {
-                name: 'alias',
-                resolveId(source, importer) {
-                  if (source === 'bar' && importer) {
-                    return path.join(path.dirname(importer), 'bar.ts')
-                  }
-                },
-              },
-            ],
+          optimizeDeps: {
+            include: ['react', 'vue'],
           },
         }),
       ],
     })
-    expect(
-      output.map((o) => {
-        return {
-          code: o.type === 'chunk' ? o.code : o.source,
-          path: o.fileName,
-        }
-      })
-    ).toMatchInlineSnapshot(`
-      Array [
-        Object {
-          "code": "// test/.temp/esbuild/bundle simple/fixture/bar.ts
-      var bar = \\"bar\\";
 
-      // test/.temp/esbuild/bundle simple/fixture/Foo.jsx
-      var Foo = /* @__PURE__ */ React.createElement(\\"div\\", null, \\"foo \\", bar);
-
-      // test/.temp/esbuild/bundle simple/fixture/entry-a.jsx
-      var A = () => /* @__PURE__ */ React.createElement(Foo, null, \\"A\\");
-
-      export { A };
-      ",
-          "path": "entry-a.js",
-        },
-        Object {
-          "code": "// test/.temp/esbuild/bundle simple/fixture/bar.ts
-      var bar = \\"bar\\";
-
-      // test/.temp/esbuild/bundle simple/fixture/Foo.jsx
-      var Foo = /* @__PURE__ */ React.createElement(\\"div\\", null, \\"foo \\", bar);
-
-      // test/.temp/esbuild/bundle simple/fixture/entry-b.jsx
-      var B = () => /* @__PURE__ */ React.createElement(Foo, null, \\"B\\");
-
-      export { B };
-      ",
-          "path": "entry-b.js",
-        },
-      ]
-    `)
+    expect(output[0].code).not.toContain('import ')
   })
 })

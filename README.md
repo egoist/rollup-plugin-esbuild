@@ -27,7 +27,7 @@ export default {
       // All options are optional
       include: /\.[jt]sx?$/, // default, inferred from `loaders` option
       exclude: /node_modules/, // default
-      sourceMap: false, // default
+      sourceMap: false, // by default inferred from rollup's `output.sourcemap` option
       minify: process.env.NODE_ENV === 'production',
       target: 'es2017', // default, or 'es20XX', 'esnext'
       jsx: 'transform', // default, or 'preserve'
@@ -93,13 +93,23 @@ export default {
 }
 ```
 
-### Bundle mode
+### Optimizing Deps
 
-This plugin also includes an experimental `bundle` mode which lets rollup `resolve`, `load`, and `transform` imported files but leaves bundling to esbuild. In my simple test it's around 50% faster than non-bundle mode, but still 10x slower than raw esbuild.
+You can use this plugin to pre-bundle dependencies using esbuild and inline them in the Rollup-generated bundle:
 
-To enable this mode, passing `experimentalBundling: true` to the options.
+```js
+esbuild({
+  optimizeDeps: {
+    include: ['vue', 'vue-router'],
+  },
+})
+```
 
-Current limitation: no code splitting yet.
+This eliminates the need of `@rollup/plugin-node-modules` and `@rollup/plugin-commonjs`.
+
+Note that this is an **experimental features**, breaking changes might happen across minor version bump.
+
+TODO: Maybe we can scan Rollup input files to get a list of deps to optimize automatically.
 
 ## Sponsors
 

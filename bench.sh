@@ -1,0 +1,1 @@
+hyperfine "dum example:rollup-node-resolve" "dum example:esbuild-optimize-deps" --warmup 2

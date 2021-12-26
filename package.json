@@ -13,7 +13,8 @@
   "repository": "https://github.com/egoist/rollup-plugin-esbuild",
   "scripts": {
     "test": "jest",
-    "example": "npm run build && rollup -c example/rollup.config.js",
+    "example:rollup-node-resolve": "rollup -c example/rollup.config.js",
+    "example:esbuild-optimize-deps": "OPTIMIZE=true rollup -c example/rollup.config.js",
     "build": "rm -rf dist && tsup src/index.ts --format esm,cjs --dts",
     "prepublishOnly": "npm run build"
   },
@@ -21,19 +22,29 @@
     "dist"
   ],
   "devDependencies": {
+    "@rollup/plugin-commonjs": "^21.0.1",
+    "@rollup/plugin-node-resolve": "^13.1.1",
+    "@types/debug": "^4.1.7",
     "@types/jest": "^27.0.2",
     "@types/node": "14.14.37",
     "esbuild": "^0.14.8",
     "istextorbinary": "^6.0.0",
     "jest": "^27.3.1",
+    "lodash": "^4.17.21",
     "prettier": "^2.4.1",
+    "react": "^17.0.2",
     "rollup": "^2.59.0",
+    "three": "^0.136.0",
+    "ts-essentials": "^9.1.0",
     "ts-jest": "^27.0.7",
     "tsup": "^5.7.2",
-    "typescript": "^4.4.4"
+    "typescript": "^4.4.4",
+    "vue": "^3.2.26"
   },
   "dependencies": {
     "@rollup/pluginutils": "^4.1.1",
+    "debug": "^4.3.3",
+    "es-module-lexer": "^0.9.3",
     "joycon": "^3.0.1",
     "jsonc-parser": "^3.0.0"
   },
