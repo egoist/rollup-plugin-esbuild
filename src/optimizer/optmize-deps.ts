@@ -1,7 +1,7 @@
 import fs from 'fs'
 import path from 'path'
 import { build, BuildOptions as EsbuildOptions } from 'esbuild'
-import esModuleLexer from 'es-module-lexer'
+import * as esModuleLexer from 'es-module-lexer'
 
 export type OptimizeDepsOptions = {
   include: string[]
