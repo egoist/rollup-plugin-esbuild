@@ -31,6 +31,7 @@ dependencies:
   es-module-lexer: 0.9.3
   joycon: 3.0.1
   jsonc-parser: 3.0.0
+  ts-essentials: 9.1.0_typescript@4.4.4
 
 devDependencies:
   '@rollup/plugin-commonjs': 21.0.1_rollup@2.59.0
@@ -46,7 +47,6 @@ devDependencies:
   react: 17.0.2
   rollup: 2.59.0
   three: 0.136.0
-  ts-essentials: 9.1.0_typescript@4.4.4
   ts-jest: 27.0.7_2c4ca6574207836d1023f54689cc81ac
   tsup: 5.7.2_typescript@4.4.4
   typescript: 4.4.4
@@ -3368,7 +3368,7 @@ packages:
       typescript: '>=4.1.0'
     dependencies:
       typescript: 4.4.4
-    dev: true
+    dev: false
 
   /ts-interface-checker/0.1.13:
     resolution: {integrity: sha512-Y/arvbn+rrz3JCKl9C4kVNfTfSm2/mEp5FSz5EsZSANGPSlQrpRI5M4PKF+mJnE52jOO90PnPSc3Ur3bTQw0gA==}
