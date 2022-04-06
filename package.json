@@ -15,7 +15,7 @@
     "test": "jest",
     "example:rollup-node-resolve": "rollup -c example/rollup.config.js",
     "example:esbuild-optimize-deps": "OPTIMIZE=true rollup -c example/rollup.config.js",
-    "build": "rm -rf dist && tsup src/index.ts --format esm,cjs --dts",
+    "build": "rm -rf dist && tsup src/index.ts --format esm,cjs --dts-resolve",
     "prepublishOnly": "npm run build"
   },
   "files": [
