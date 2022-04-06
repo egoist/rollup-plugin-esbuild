@@ -101,6 +101,23 @@ describe('esbuild plugin', () => {
     `)
   })
 
+  test('charset', async () => {
+    const dir = realFs(getTestName(), {
+      './fixture/index.js': `
+        console.log('π')
+      `,
+    })
+    const output = await build({
+      dir,
+      rollupPlugins: [esbuild({ charset: 'utf8' })],
+      format: 'esm',
+    })
+    expect(output[0].code).toMatchInlineSnapshot(`
+      "console.log(\\"π\\");
+      "
+    `)
+  })
+
   test('keepNames', async () => {
     const dir = realFs(getTestName(), {
       './fixture/index.js': `

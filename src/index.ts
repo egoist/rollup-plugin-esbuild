@@ -33,6 +33,7 @@ export type Options = {
   minifyWhitespace?: boolean
   minifyIdentifiers?: boolean
   minifySyntax?: boolean
+  charset?: CommonOptions['charset']
   keepNames?: boolean
   legalComments?: CommonOptions['legalComments']
   target?: string | string[]
@@ -180,6 +181,7 @@ export default (options: Options = {}): RollupPlugin => {
         sourcemap: sourceMap,
         sourcefile: id,
         pure: options.pure,
+        charset: options.charset,
         legalComments: options.legalComments,
       })
 

@@ -19,6 +19,7 @@ export type Options = {
   minifyWhitespace?: boolean
   minifyIdentifiers?: boolean
   minifySyntax?: boolean
+  charset?: CommonOptions['charset']
   keepNames?: boolean
   legalComments?: CommonOptions['legalComments']
   target?: CommonOptions['target']
@@ -40,6 +41,7 @@ export const getRenderChunk = (options: Options): RenderChunkHook =>
         minifyWhitespace: options.minifyWhitespace,
         minifyIdentifiers: options.minifyIdentifiers,
         minifySyntax: options.minifySyntax,
+        charset: options.charset,
         keepNames: options.keepNames,
         legalComments: options.legalComments,
         sourcemap: options.sourceMap !== false,
