@@ -1,7 +1,7 @@
 import { existsSync, statSync } from 'fs'
 import { extname, resolve, dirname, join } from 'path'
 import { Plugin as RollupPlugin } from 'rollup'
-import { transform, Loader, CommonOptions } from 'esbuild'
+import { transform, Loader, TransformOptions } from 'esbuild'
 import { MarkOptional } from 'ts-essentials'
 import { createFilter, FilterPattern } from '@rollup/pluginutils'
 import createDebug from 'debug'
@@ -9,7 +9,7 @@ import { getOptions } from './options'
 import { minify, getRenderChunk } from './minify'
 import { warn } from './warn'
 import {
-  optimizeDeps,
+  optimizeDeps as doOptimizeDeps,
   OptimizeDepsOptions,
   OptimizeDepsResult,
 } from './optimizer/optmize-deps'
@@ -25,27 +25,13 @@ const defaultLoaders: { [ext: string]: Loader } = {
   '.tsx': 'tsx',
 }
 
-export type Options = {
+export type Options = Omit<
+  TransformOptions,
+  'sourcemap' | 'loader' | 'tsconfigRaw'
+> & {
   include?: FilterPattern
   exclude?: FilterPattern
   sourceMap?: boolean
-  minify?: boolean
-  minifyWhitespace?: boolean
-  minifyIdentifiers?: boolean
-  minifySyntax?: boolean
-  charset?: CommonOptions['charset']
-  keepNames?: boolean
-  legalComments?: CommonOptions['legalComments']
-  target?: string | string[]
-  /**
-   * Requires esbuild >= 0.12.1
-   */
-  jsx?: 'transform' | 'preserve'
-  jsxFactory?: string
-  jsxFragment?: string
-  define?: {
-    [k: string]: string
-  }
   optimizeDeps?: MarkOptional<OptimizeDepsOptions, 'cwd' | 'sourceMap'>
   /**
    * Use this tsconfig file instead
@@ -59,19 +45,24 @@ export type Options = {
   loaders?: {
     [ext: string]: Loader | false
   }
-  pure?: string[]
 }
 
-export default (options: Options = {}): RollupPlugin => {
-  let target: string | string[]
-
+export default ({
+  include,
+  exclude,
+  sourceMap: _sourceMap,
+  optimizeDeps,
+  tsconfig,
+  loaders: _loaders,
+  ...esbuildOptions
+}: Options = {}): RollupPlugin => {
   const loaders = {
     ...defaultLoaders,
   }
 
-  if (options.loaders) {
-    for (const key of Object.keys(options.loaders)) {
-      const value = options.loaders[key]
+  if (_loaders) {
+    for (const key of Object.keys(_loaders)) {
+      const value = _loaders[key]
       if (typeof value === 'string') {
         loaders[key] = value
       } else if (value === false) {
@@ -87,8 +78,8 @@ export default (options: Options = {}): RollupPlugin => {
   const EXCLUDE_REGEXP = /node_modules/
 
   const filter = createFilter(
-    options.include || INCLUDE_REGEXP,
-    options.exclude || EXCLUDE_REGEXP
+    include || INCLUDE_REGEXP,
+    exclude || EXCLUDE_REGEXP
   )
 
   const resolveFile = (resolved: string, index: boolean = false) => {
@@ -109,22 +100,21 @@ export default (options: Options = {}): RollupPlugin => {
     options({ context }) {
       if (context) {
         cwd = context
-        options
       }
       return null
     },
     outputOptions({ sourcemap }) {
-      sourceMap = options.sourceMap ?? !!sourcemap
+      sourceMap = _sourceMap ?? !!sourcemap
       return null
     },
 
     async buildStart() {
-      if (!options.optimizeDeps || optimizeDepsResult) return
+      if (!optimizeDeps || optimizeDepsResult) return
 
-      optimizeDepsResult = await optimizeDeps({
+      optimizeDepsResult = await doOptimizeDeps({
         cwd,
         sourceMap,
-        ...options.optimizeDeps,
+        ...optimizeDeps,
       })
 
       debugOptimizeDeps('optimized %O', optimizeDepsResult.optimized)
@@ -165,24 +155,16 @@ export default (options: Options = {}): RollupPlugin => {
       }
 
       const defaultOptions =
-        options.tsconfig === false
-          ? {}
-          : await getOptions(dirname(id), options.tsconfig)
-
-      target = options.target || defaultOptions.target || 'es2017'
+        tsconfig === false ? {} : await getOptions(dirname(id), tsconfig)
 
       const result = await transform(code, {
         loader,
-        target,
-        jsx: options.jsx,
-        jsxFactory: options.jsxFactory || defaultOptions.jsxFactory,
-        jsxFragment: options.jsxFragment || defaultOptions.jsxFragment,
-        define: options.define,
+        target: defaultOptions.target || 'es2017',
+        jsxFactory: defaultOptions.jsxFactory,
+        jsxFragment: defaultOptions.jsxFragment,
         sourcemap: sourceMap,
         sourcefile: id,
-        pure: options.pure,
-        charset: options.charset,
-        legalComments: options.legalComments,
+        ...esbuildOptions,
       })
 
       await warn(this, result.warnings)
@@ -196,7 +178,7 @@ export default (options: Options = {}): RollupPlugin => {
     },
 
     renderChunk: getRenderChunk({
-      ...options,
+      ...esbuildOptions,
       sourceMap,
     }),
   }

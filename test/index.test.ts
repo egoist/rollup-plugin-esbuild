@@ -131,7 +131,7 @@ describe('esbuild plugin', () => {
     })
     expect(eval(output[0].code).name).toBe('Foo')
     expect(output[0].code).toMatchInlineSnapshot(`
-      "\\"use strict\\";var r=Object.defineProperty;var t=(s,e)=>r(s,\\"name\\",{value:e,configurable:!0});class c{}t(c,\\"Foo\\"),module.exports=c;
+      "\\"use strict\\";var o=Object.defineProperty;var a=(e,r)=>o(e,\\"name\\",{value:r,configurable:!0});var s=Object.defineProperty,c=a((e,r)=>s(e,\\"name\\",{value:r,configurable:!0}),\\"e\\");class t{}a(t,\\"l\\"),c(t,\\"Foo\\"),module.exports=t;
       "
     `)
   })

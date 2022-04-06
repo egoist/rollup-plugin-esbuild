@@ -1,5 +1,5 @@
 import { Plugin, InternalModuleFormat, RenderChunkHook } from 'rollup'
-import { transform, CommonOptions, Format } from 'esbuild'
+import { transform, TransformOptions, Format } from 'esbuild'
 import { warn } from './warn'
 
 const getEsbuildFormat = (
@@ -13,19 +13,14 @@ const getEsbuildFormat = (
   }
 }
 
-export type Options = {
+export type Options = Omit<TransformOptions, 'sourcemap'> & {
   sourceMap?: boolean
-  minify?: boolean
-  minifyWhitespace?: boolean
-  minifyIdentifiers?: boolean
-  minifySyntax?: boolean
-  charset?: CommonOptions['charset']
-  keepNames?: boolean
-  legalComments?: CommonOptions['legalComments']
-  target?: CommonOptions['target']
 }
 
-export const getRenderChunk = (options: Options): RenderChunkHook =>
+export const getRenderChunk = ({
+  sourceMap,
+  ...options
+}: Options): RenderChunkHook =>
   async function (code, _, rollupOptions) {
     if (
       options.minify ||
@@ -37,15 +32,8 @@ export const getRenderChunk = (options: Options): RenderChunkHook =>
       const result = await transform(code, {
         format,
         loader: 'js',
-        minify: options.minify,
-        minifyWhitespace: options.minifyWhitespace,
-        minifyIdentifiers: options.minifyIdentifiers,
-        minifySyntax: options.minifySyntax,
-        charset: options.charset,
-        keepNames: options.keepNames,
-        legalComments: options.legalComments,
-        sourcemap: options.sourceMap !== false,
-        target: options.target,
+        sourcemap: sourceMap !== false,
+        ...options,
       })
       await warn(this, result.warnings)
       if (result.code) {
