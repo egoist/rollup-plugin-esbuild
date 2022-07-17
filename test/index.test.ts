@@ -182,7 +182,7 @@ describe('esbuild plugin', () => {
       format: 'commonjs',
     })
     expect(output[0].code).toMatchInlineSnapshot(`
-      "\\"use strict\\";Object.defineProperty(exports,\\"__esModule\\",{value:!0});const e=!0;console.log(e),exports.minifyMe=e;
+      "\\"use strict\\";Object.defineProperty(exports,\\"__esModule\\",{value:!0});const e=!0;console.log(!0),exports.minifyMe=e;
       "
     `)
   })
@@ -251,6 +251,40 @@ describe('esbuild plugin', () => {
         console.log(Foo)
       `,
       './fixture/foo/index.tsx': `
+        export default class Foo {
+          render() {
+            return <div className="hehe">hello there!!!</div>
+          }
+        }
+      `,
+    })
+
+    const output = await build({
+      dir,
+      rollupPlugins: [esbuild({})],
+    })
+    expect(output[0].code).toMatchInlineSnapshot(`
+      "class Foo {
+        render() {
+          return /* @__PURE__ */ React.createElement(\\"div\\", {
+            className: \\"hehe\\"
+          }, \\"hello there!!!\\");
+        }
+      }
+
+      console.log(Foo);
+      "
+    `)
+  })
+
+  test('load jsx/tsx', async () => {
+    const dir = realFs(getTestName(), {
+      './fixture/index.js': `
+        import Foo from './foo.jsx'
+  
+        console.log(Foo)
+      `,
+      './fixture/foo.tsx': `
         export default class Foo {
           render() {
             return <div className="hehe">hello there!!!</div>
@@ -393,7 +427,7 @@ describe('minify plugin', () => {
       rollupPlugins: [minify()],
     })
     expect(output[0].code).toMatchInlineSnapshot(`
-      "const o=!0;console.log(o);
+      "const e=!0;console.log(!0);
       "
     `)
   })
@@ -411,7 +445,7 @@ describe('minify plugin', () => {
       format: 'commonjs',
     })
     expect(output[0].code).toMatchInlineSnapshot(`
-      "\\"use strict\\";const e=!0;console.log(e);
+      "\\"use strict\\";const e=!0;console.log(!0);
       "
     `)
   })
