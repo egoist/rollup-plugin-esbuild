@@ -182,7 +182,7 @@ describe('esbuild plugin', () => {
       format: 'commonjs',
     })
     expect(output[0].code).toMatchInlineSnapshot(`
-      "\\"use strict\\";Object.defineProperty(exports,\\"__esModule\\",{value:!0});const e=!0;console.log(!0),exports.minifyMe=e;
+      "\\"use strict\\";Object.defineProperty(exports,\\"__esModule\\",{value:!0});const e=!0;console.log(e),exports.minifyMe=e;
       "
     `)
   })
@@ -427,7 +427,7 @@ describe('minify plugin', () => {
       rollupPlugins: [minify()],
     })
     expect(output[0].code).toMatchInlineSnapshot(`
-      "const e=!0;console.log(!0);
+      "const o=!0;console.log(o);
       "
     `)
   })
@@ -445,7 +445,7 @@ describe('minify plugin', () => {
       format: 'commonjs',
     })
     expect(output[0].code).toMatchInlineSnapshot(`
-      "\\"use strict\\";const e=!0;console.log(!0);
+      "\\"use strict\\";const e=!0;console.log(e);
       "
     `)
   })
