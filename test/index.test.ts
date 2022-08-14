@@ -277,6 +277,40 @@ describe('esbuild plugin', () => {
     `)
   })
 
+  test('load jsx/tsx', async () => {
+    const dir = realFs(getTestName(), {
+      './fixture/index.js': `
+        import Foo from './foo.jsx'
+  
+        console.log(Foo)
+      `,
+      './fixture/foo.tsx': `
+        export default class Foo {
+          render() {
+            return <div className="hehe">hello there!!!</div>
+          }
+        }
+      `,
+    })
+
+    const output = await build({
+      dir,
+      rollupPlugins: [esbuild({})],
+    })
+    expect(output[0].code).toMatchInlineSnapshot(`
+      "class Foo {
+        render() {
+          return /* @__PURE__ */ React.createElement(\\"div\\", {
+            className: \\"hehe\\"
+          }, \\"hello there!!!\\");
+        }
+      }
+
+      console.log(Foo);
+      "
+    `)
+  })
+
   test('load json', async () => {
     const dir = realFs(getTestName(), {
       './fixture/index.js': `

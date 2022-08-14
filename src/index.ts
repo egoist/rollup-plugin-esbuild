@@ -1,5 +1,5 @@
 import { existsSync, statSync } from 'fs'
-import { extname, resolve, dirname, join } from 'path'
+import { extname, resolve, dirname, join, basename } from 'path'
 import { Plugin as RollupPlugin } from 'rollup'
 import { transform, Loader, TransformOptions } from 'esbuild'
 import { MarkOptional } from 'ts-essentials'
@@ -83,8 +83,9 @@ export default ({
   )
 
   const resolveFile = (resolved: string, index: boolean = false) => {
+    const fileWithoutExt = join(dirname(resolved), basename(resolved, extname(resolved)))
     for (const ext of extensions) {
-      const file = index ? join(resolved, `index${ext}`) : `${resolved}${ext}`
+      const file = index ? join(resolved, `index${ext}`) : `${fileWithoutExt}${ext}`
       if (existsSync(file)) return file
     }
     return null

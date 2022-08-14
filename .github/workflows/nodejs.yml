@@ -23,7 +23,7 @@ jobs:
 
       - uses: actions/setup-node@v1
         with:
-          node-version: 14.x
+          node-version: 16.x
 
       - name: Cache ~/.pnpm-store
         uses: actions/cache@v2
@@ -47,7 +47,7 @@ jobs:
         run: npm run test
 
       - name: Release
-        run: pnpx -y semantic-release
+        run: pnpx semantic-release
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
