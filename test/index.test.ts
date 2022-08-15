@@ -285,11 +285,15 @@ describe('esbuild plugin', () => {
         console.log(Foo)
       `,
       './fixture/foo.tsx': `
+        import {util} from './some.util'
         export default class Foo {
           render() {
-            return <div className="hehe">hello there!!!</div>
+            return <div className="hehe">hello there!!!{util}</div>
           }
         }
+      `,
+      './fixture/some.util.ts': `
+      export const util = 42
       `,
     })
 
@@ -298,11 +302,13 @@ describe('esbuild plugin', () => {
       rollupPlugins: [esbuild({})],
     })
     expect(output[0].code).toMatchInlineSnapshot(`
-      "class Foo {
+      "const util = 42;
+
+      class Foo {
         render() {
           return /* @__PURE__ */ React.createElement(\\"div\\", {
             className: \\"hehe\\"
-          }, \\"hello there!!!\\");
+          }, \\"hello there!!!\\", util);
         }
       }
 
