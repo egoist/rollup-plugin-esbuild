@@ -182,7 +182,7 @@ describe('esbuild plugin', () => {
       format: 'commonjs',
     })
     expect(output[0].code).toMatchInlineSnapshot(`
-      "\\"use strict\\";Object.defineProperty(exports,\\"__esModule\\",{value:!0});const e=!0;console.log(e),exports.minifyMe=e;
+      "\\"use strict\\";Object.defineProperty(exports,\\"__esModule\\",{value:!0});const e=!0;console.log(!0),exports.minifyMe=e;
       "
     `)
   })
@@ -385,6 +385,64 @@ describe('esbuild plugin', () => {
     `)
   })
 
+  test('use jsx (react) from tsconfig', async () => {
+    const dir = realFs(getTestName(), {
+      './fixture/index.jsx': `
+        export const foo = <div>foo</div>
+      `,
+      './fixture/tsconfig.json': `
+        {
+          "compilerOptions": {
+            "jsx": "react"
+          }
+        }
+      `,
+    })
+
+    const output = await build({
+      input: './fixture/index.jsx',
+      dir,
+      rollupPlugins: [esbuild({})],
+    })
+    expect(output[0].code).toMatchInlineSnapshot(`
+      "const foo = /* @__PURE__ */ React.createElement(\\"div\\", null, \\"foo\\");
+
+      export { foo };
+      "
+    `)
+  })
+
+  test('use jsx (react-jsx) from tsconfig', async () => {
+    const dir = realFs(getTestName(), {
+      './fixture/index.jsx': `
+        export const foo = <div>foo</div>
+      `,
+      './fixture/tsconfig.json': `
+        {
+          "compilerOptions": {
+            "jsx": "react-jsx"
+          }
+        }
+      `,
+    })
+
+    const output = await build({
+      input: './fixture/index.jsx',
+      dir,
+      rollupPlugins: [esbuild({})],
+    })
+    expect(output[0].code).toMatchInlineSnapshot(`
+      "import { jsx } from 'react/jsx-runtime';
+
+      const foo = /* @__PURE__ */ jsx(\\"div\\", {
+        children: \\"foo\\"
+      });
+
+      export { foo };
+      "
+    `)
+  })
+
   test('use custom tsconfig.json', async () => {
     const dir = realFs(getTestName(), {
       './fixture/index.jsx': `
@@ -433,7 +491,7 @@ describe('minify plugin', () => {
       rollupPlugins: [minify()],
     })
     expect(output[0].code).toMatchInlineSnapshot(`
-      "const o=!0;console.log(o);
+      "const e=!0;console.log(!0);
       "
     `)
   })
@@ -451,7 +509,7 @@ describe('minify plugin', () => {
       format: 'commonjs',
     })
     expect(output[0].code).toMatchInlineSnapshot(`
-      "\\"use strict\\";const e=!0;console.log(e);
+      "\\"use strict\\";const e=!0;console.log(!0);
       "
     `)
   })
