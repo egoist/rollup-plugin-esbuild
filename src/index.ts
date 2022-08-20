@@ -95,7 +95,7 @@ export default ({
 
   let optimizeDepsResult: OptimizeDepsResult | undefined
   let cwd = process.cwd()
-  let sourceMap = false
+  let sourceMap = !!_sourceMap
 
   return {
     name: 'esbuild',

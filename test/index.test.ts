@@ -3,6 +3,19 @@ import fs from 'fs'
 import { rollup, Plugin as RollupPlugin, ModuleFormat } from 'rollup'
 import esbuild, { minify } from '../src'
 
+const mockEsbuildTransform = jest.fn()
+
+jest.mock('esbuild', () => {
+  const originalModule = jest.requireActual('esbuild')
+  return {
+    ...originalModule,
+    transform: (...args: any[]) => {
+      mockEsbuildTransform(...args)
+      return originalModule.transform(...args)
+    },
+  }
+})
+
 const realFs = (folderName: string, files: Record<string, string>) => {
   const tmpDir = path.join(__dirname, '.temp', `esbuild/${folderName}`)
   Object.keys(files).forEach((file) => {
@@ -41,6 +54,10 @@ const build = async ({
   })
   return output
 }
+
+beforeEach(() => {
+  mockEsbuildTransform.mockClear()
+})
 
 describe('esbuild plugin', () => {
   test('simple', async () => {
@@ -417,6 +434,56 @@ describe('esbuild plugin', () => {
       export { foo };
       "
     `)
+  })
+
+  test('sourcemap', async () => {
+    const dir = realFs(getTestName(), {
+      './fixture/index.js': `console.log('sourcemap')`,
+    })
+
+    // default:
+    await build({
+      dir,
+      rollupPlugins: [esbuild({})],
+    })
+    expect(mockEsbuildTransform).toHaveBeenCalledWith(
+      expect.any(String),
+      expect.objectContaining({
+        sourcemap: false,
+      })
+    )
+
+    // sourceMap: false
+    await build({
+      dir,
+      rollupPlugins: [
+        esbuild({
+          sourceMap: false,
+        }),
+      ],
+    })
+    expect(mockEsbuildTransform).toHaveBeenCalledWith(
+      expect.any(String),
+      expect.objectContaining({
+        sourcemap: false,
+      })
+    )
+
+    // sourceMap: true
+    await build({
+      dir,
+      rollupPlugins: [
+        esbuild({
+          sourceMap: true,
+        }),
+      ],
+    })
+    expect(mockEsbuildTransform).toHaveBeenCalledWith(
+      expect.any(String),
+      expect.objectContaining({
+        sourcemap: true,
+      })
+    )
   })
 })
 
