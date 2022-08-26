@@ -161,7 +161,8 @@ export default ({
         jsxFactory: defaultOptions.jsxFactory,
         jsxFragment: defaultOptions.jsxFragment,
         jsx: defaultOptions.jsx,
-        jsxDev: defaultOptions.jsxDev,
+        // Compat: passing this option in older esbuild version will result in error
+        ...(defaultOptions.jsxDev ? { jsxDev: true } : {}),
         sourcemap: sourceMap,
         sourcefile: id,
         ...esbuildOptions,
