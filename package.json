@@ -27,7 +27,7 @@
     "@types/debug": "^4.1.7",
     "@types/jest": "^27.0.2",
     "@types/node": "14.14.37",
-    "esbuild": "^0.14.8",
+    "esbuild": "^0.14.51",
     "istextorbinary": "^6.0.0",
     "jest": "^27.3.1",
     "lodash": "^4.17.21",
