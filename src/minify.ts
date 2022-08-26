@@ -18,7 +18,7 @@ export type Options = Omit<TransformOptions, 'sourcemap'> & {
 }
 
 export const getRenderChunk = ({
-  sourceMap,
+  sourceMap = true,
   ...options
 }: Options): RenderChunkHook =>
   async function (code, _, rollupOptions) {
@@ -32,7 +32,7 @@ export const getRenderChunk = ({
       const result = await transform(code, {
         format,
         loader: 'js',
-        sourcemap: sourceMap !== false,
+        sourcemap: sourceMap,
         ...options,
       })
       await warn(this, result.warnings)
@@ -46,15 +46,12 @@ export const getRenderChunk = ({
     return null
   }
 
-export const minify = (options: Options = {}): Plugin => {
-  let sourceMap = false
+export const minify = ({
+  sourceMap = true,
+  ...options
+}: Options = {}): Plugin => {
   return {
     name: 'esbuild-minify',
-
-    outputOptions({ sourcemap }) {
-      sourceMap = options.sourceMap ?? !!sourcemap
-      return null
-    },
 
     renderChunk: getRenderChunk({
       minify: true,
