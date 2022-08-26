@@ -165,6 +165,8 @@ export default ({
         target: defaultOptions.target || 'es2017',
         jsxFactory: defaultOptions.jsxFactory,
         jsxFragment: defaultOptions.jsxFragment,
+        jsx: defaultOptions.jsx,
+        jsxDev: defaultOptions.jsxDev,
         sourcemap: sourceMap,
         sourcefile: id,
         ...esbuildOptions,
