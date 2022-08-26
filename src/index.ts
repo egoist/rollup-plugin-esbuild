@@ -50,7 +50,7 @@ export type Options = Omit<
 export default ({
   include,
   exclude,
-  sourceMap: _sourceMap,
+  sourceMap = true,
   optimizeDeps,
   tsconfig,
   loaders: _loaders,
@@ -95,7 +95,6 @@ export default ({
 
   let optimizeDepsResult: OptimizeDepsResult | undefined
   let cwd = process.cwd()
-  let sourceMap = !!_sourceMap
 
   return {
     name: 'esbuild',
@@ -104,10 +103,6 @@ export default ({
       if (context) {
         cwd = context
       }
-      return null
-    },
-    outputOptions({ sourcemap }) {
-      sourceMap = _sourceMap ?? !!sourcemap
       return null
     },
 

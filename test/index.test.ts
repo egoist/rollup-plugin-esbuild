@@ -34,18 +34,21 @@ const build = async ({
   rollupPlugins = [],
   dir = '.',
   format = 'esm',
+  external,
 }: {
   input?: string | string[]
   sourcemap?: boolean
   rollupPlugins?: RollupPlugin[]
   dir?: string
   format?: ModuleFormat
+  external?: string[]
 } = {}) => {
   const build = await rollup({
     input: [...(Array.isArray(input) ? input : [input])].map((v) =>
       path.resolve(dir, v)
     ),
     plugins: rollupPlugins,
+    external,
   })
   const { output } = await build.generate({
     format,
@@ -447,6 +450,7 @@ describe('esbuild plugin', () => {
       input: './fixture/index.jsx',
       dir,
       rollupPlugins: [esbuild({})],
+      external: ['react/jsx-runtime'],
     })
     expect(output[0].code).toMatchInlineSnapshot(`
       "import { jsx } from 'react/jsx-runtime';
@@ -507,7 +511,7 @@ describe('esbuild plugin', () => {
     expect(mockEsbuildTransform).toHaveBeenCalledWith(
       expect.any(String),
       expect.objectContaining({
-        sourcemap: false,
+        sourcemap: true,
       })
     )
 
