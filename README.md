@@ -52,7 +52,7 @@ export default {
 ```
 
 - `include` and `exclude` can be `String | RegExp | Array[...String|RegExp]`, when supplied it will override default values.
-- It uses `jsxFactory`, `jsxFragmentFactory` and `target` options from your `tsconfig.json` as default values.
+- It uses `jsx`, `jsxDev`, `jsxFactory`, `jsxFragmentFactory` and `target` options from your `tsconfig.json` as default values.
 
 ### Declaration File
 
