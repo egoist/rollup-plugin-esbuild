@@ -1,4 +1,4 @@
-import { Plugin, InternalModuleFormat, RenderChunkHook } from 'rollup'
+import { Plugin, InternalModuleFormat } from 'rollup'
 import { transform, TransformOptions, Format } from 'esbuild'
 import { warn } from './warn'
 
@@ -20,7 +20,7 @@ export type Options = Omit<TransformOptions, 'sourcemap'> & {
 export const getRenderChunk = ({
   sourceMap = true,
   ...options
-}: Options): RenderChunkHook =>
+}: Options): Plugin["renderChunk"] =>
   async function (code, _, rollupOptions) {
     if (
       options.minify ||
