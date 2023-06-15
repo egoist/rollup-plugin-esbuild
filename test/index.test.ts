@@ -539,6 +539,52 @@ describe('esbuild plugin', () => {
       })
     )
   })
+
+  test('with decorators', async () => {
+    const dir = realFs(getTestName(), {
+      './fixture/index.js': `
+        import Foo from './foo'
+  
+        console.log(Foo)
+      `,
+      './fixture/foo.tsx': `
+        function log(target: any, propertyKey: string, descriptor: PropertyDescriptor) {
+          console.log(\`Method \${propertyKey} called\`);
+        }
+      
+        export default class Foo {
+          @log
+          render() {
+            return <div className="hehe">hello there!!!</div>
+          }
+        }
+      `,
+      './fixture/tsconfig.success.json': `
+        {
+          "compilerOptions": {
+            "experimentalDecorators": true
+          }
+        }
+      `,
+      './fixture/tsconfig.failure.json': `
+        {
+          "compilerOptions": {}
+        }
+      `,
+    })
+    await expect(
+      build({
+        dir,
+        rollupPlugins: [esbuild({ tsconfig: 'tsconfig.failure.json' })],
+      })
+    ).rejects.toBeTruthy()
+    await expect(
+      build({
+        dir,
+        rollupPlugins: [esbuild({ tsconfig: 'tsconfig.success.json' })],
+      })
+    ).resolves.toBeTruthy()
+  })
 })
 
 describe('minify plugin', () => {
