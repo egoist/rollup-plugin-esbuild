@@ -166,6 +166,7 @@ export default ({
         sourcemap: sourceMap,
         sourcefile: id,
         ...esbuildOptions,
+        tsconfigRaw: defaultOptions.tsconfigRaw,
       })
 
       await warn(this, result.warnings)

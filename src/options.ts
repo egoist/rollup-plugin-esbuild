@@ -35,7 +35,7 @@ export const getOptions = async (
 ): Promise<
   Pick<
     TransformOptions,
-    'jsxFactory' | 'jsxFragment' | 'target' | 'jsx' | 'jsxDev'
+    'jsxFactory' | 'jsxFragment' | 'target' | 'jsx' | 'jsxDev' | 'tsconfigRaw'
   >
 > => {
   // This call is cached
@@ -50,6 +50,7 @@ export const getOptions = async (
       // Maybe remove in 3.0, #77
       target: target && target.toLowerCase(),
       ...jsxValueMap[jsx],
+      tsconfigRaw: data,
     }
   }
   return {}
