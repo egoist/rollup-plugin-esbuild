@@ -1,6 +1,7 @@
 {
   "name": "rollup-plugin-esbuild",
   "version": "0.0.0-semantic-release",
+  "packageManager": "pnpm@8.7.6",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
