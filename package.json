@@ -16,7 +16,7 @@
   "scripts": {
     "test": "vitest",
     "build": "rm -rf dist && tsup src/index.ts --format esm,cjs --dts-resolve",
-    "prepublishOnly": "npm run build"
+    "prepublishOnly": "pnpm run build"
   },
   "files": [
     "dist"
@@ -46,7 +46,6 @@
     "rollup": "^1.20.0 || ^2.0.0 || ^3.0.0"
   },
   "engines": {
-    "node": ">=14.18.0",
-    "npm": ">=8.0.0"
+    "node": ">=14.18.0"
   }
 }
