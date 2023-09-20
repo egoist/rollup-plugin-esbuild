@@ -73,13 +73,13 @@ export default ({
 
   const extensions: string[] = Object.keys(loaders)
   const INCLUDE_REGEXP = new RegExp(
-    `\\.(${extensions.map((ext) => ext.slice(1)).join('|')})$`
+    `\\.(${extensions.map((ext) => ext.slice(1)).join('|')})$`,
   )
   const EXCLUDE_REGEXP = /node_modules/
 
   const filter = createFilter(
     include || INCLUDE_REGEXP,
-    exclude || EXCLUDE_REGEXP
+    exclude || EXCLUDE_REGEXP,
   )
 
   const resolveFile = (resolved: string, index: boolean = false) => {
@@ -128,7 +128,7 @@ export default ({
       if (importer && id[0] === '.') {
         const resolved = resolve(
           importer ? dirname(importer) : process.cwd(),
-          id
+          id,
         )
 
         let file = resolveFile(resolved)

@@ -21,7 +21,7 @@ export type OptimizeDepsResult = {
 const slash = (p: string) => p.replace(/\\/g, '/')
 
 export const optimizeDeps = async (
-  options: OptimizeDepsOptions
+  options: OptimizeDepsOptions,
 ): Promise<OptimizeDepsResult> => {
   const cacheDir = path.join(options.cwd, 'node_modules/.optimize_deps')
   await fs.promises.mkdir(cacheDir, { recursive: true })
@@ -82,7 +82,7 @@ export const optimizeDeps = async (
                     : `module.exports = require('${slash(absolute)}')`,
                 resolveDir,
               }
-            }
+            },
           )
         },
       },

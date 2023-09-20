@@ -3,7 +3,7 @@ import { transform, TransformOptions, Format } from 'esbuild'
 import { warn } from './warn'
 
 const getEsbuildFormat = (
-  rollupFormat: InternalModuleFormat
+  rollupFormat: InternalModuleFormat,
 ): Format | undefined => {
   if (rollupFormat === 'es') {
     return 'esm'
@@ -20,7 +20,7 @@ export type Options = Omit<TransformOptions, 'sourcemap'> & {
 export const getRenderChunk = ({
   sourceMap = true,
   ...options
-}: Options): Plugin["renderChunk"] =>
+}: Options): Plugin['renderChunk'] =>
   async function (code, _, rollupOptions) {
     if (
       options.minify ||

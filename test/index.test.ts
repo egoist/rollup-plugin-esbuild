@@ -7,9 +7,8 @@ import { vi, expect, beforeEach, describe, test } from 'vitest'
 const mockEsbuildTransform = vi.fn()
 
 vi.mock('esbuild', async (): Promise<typeof import('esbuild')> => {
-  const originalModule = await vi.importActual<typeof import('esbuild')>(
-    'esbuild'
-  )
+  const originalModule =
+    await vi.importActual<typeof import('esbuild')>('esbuild')
   return {
     ...originalModule,
     transform: (...args) => {
@@ -30,7 +29,10 @@ const realFs = (folderName: string, files: Record<string, string>) => {
 }
 
 const getTestName = () =>
-  ((expect.getState().currentTestName as string) || '').split(' > ').slice(1).join(' ')
+  ((expect.getState().currentTestName as string) || '')
+    .split(' > ')
+    .slice(1)
+    .join(' ')
 
 const build = async ({
   input = './fixture/index.js',
@@ -49,7 +51,7 @@ const build = async ({
 } = {}) => {
   const build = await rollup({
     input: [...(Array.isArray(input) ? input : [input])].map((v) =>
-      path.resolve(dir, v)
+      path.resolve(dir, v),
     ),
     plugins: rollupPlugins,
     external,
@@ -508,7 +510,7 @@ describe('esbuild plugin', () => {
       expect.any(String),
       expect.objectContaining({
         sourcemap: true,
-      })
+      }),
     )
 
     // sourceMap: false
@@ -524,7 +526,7 @@ describe('esbuild plugin', () => {
       expect.any(String),
       expect.objectContaining({
         sourcemap: false,
-      })
+      }),
     )
 
     // sourceMap: true
@@ -540,7 +542,7 @@ describe('esbuild plugin', () => {
       expect.any(String),
       expect.objectContaining({
         sourcemap: true,
-      })
+      }),
     )
   })
 })

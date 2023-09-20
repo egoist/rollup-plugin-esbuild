@@ -31,7 +31,7 @@ const jsxValueMap: Record<any, Pick<TransformOptions, 'jsx' | 'jsxDev'>> = {
 
 export const getOptions = async (
   cwd: string,
-  tsconfig?: string
+  tsconfig?: string,
 ): Promise<
   Pick<
     TransformOptions,
