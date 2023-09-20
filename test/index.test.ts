@@ -29,7 +29,8 @@ const realFs = (folderName: string, files: Record<string, string>) => {
   return tmpDir
 }
 
-const getTestName = () => expect.getState().currentTestName || ''
+const getTestName = () =>
+  ((expect.getState().currentTestName as string) || '').split(' > ').slice(1).join(' ')
 
 const build = async ({
   input = './fixture/index.js',
