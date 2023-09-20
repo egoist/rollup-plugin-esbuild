@@ -4,72 +4,75 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
-dependencies:
-  '@rollup/pluginutils':
-    specifier: ^5.0.1
-    version: 5.0.1(rollup@3.2.2)
-  debug:
-    specifier: ^4.3.4
-    version: 4.3.4
-  es-module-lexer:
-    specifier: ^1.0.5
-    version: 1.0.5
-  joycon:
-    specifier: ^3.1.1
-    version: 3.1.1
-  jsonc-parser:
-    specifier: ^3.2.0
-    version: 3.2.0
+importers:
 
-devDependencies:
-  '@rollup/plugin-commonjs':
-    specifier: ^23.0.0
-    version: 23.0.0(rollup@3.2.2)
-  '@rollup/plugin-node-resolve':
-    specifier: ^15.0.0
-    version: 15.0.0(rollup@3.2.2)
-  '@types/debug':
-    specifier: ^4.1.7
-    version: 4.1.7
-  '@types/node':
-    specifier: 16.11.66
-    version: 16.11.66
-  esbuild:
-    specifier: ^0.15.11
-    version: 0.15.11
-  istextorbinary:
-    specifier: ^6.0.0
-    version: 6.0.0
-  lodash:
-    specifier: ^4.17.21
-    version: 4.17.21
-  prettier:
-    specifier: ^2.7.1
-    version: 2.7.1
-  react:
-    specifier: ^18.2.0
-    version: 18.2.0
-  rollup:
-    specifier: ^3.2.2
-    version: 3.2.2
-  three:
-    specifier: ^0.145.0
-    version: 0.145.0
-  ts-essentials:
-    specifier: ^9.3.0
-    version: 9.3.0(typescript@4.8.4)
-  tsup:
-    specifier: ^6.3.0
-    version: 6.3.0(typescript@4.8.4)
-  typescript:
-    specifier: ^4.8.4
-    version: 4.8.4
-  vitest:
-    specifier: ^0.34.4
-    version: 0.34.4
-  vue:
-    specifier: ^3.2.41
-    version: 3.2.41
+  .:
+    dependencies:
+      '@rollup/pluginutils':
+        specifier: ^5.0.1
+        version: 5.0.1(rollup@3.2.2)
+      debug:
+        specifier: ^4.3.4
+        version: 4.3.4
+      es-module-lexer:
+        specifier: ^1.0.5
+        version: 1.0.5
+      joycon:
+        specifier: ^3.1.1
+        version: 3.1.1
+      jsonc-parser:
+        specifier: ^3.2.0
+        version: 3.2.0
+    devDependencies:
+      '@types/debug':
+        specifier: ^4.1.7
+        version: 4.1.7
+      '@types/node':
+        specifier: 16.11.66
+        version: 16.11.66
+      esbuild:
+        specifier: ^0.15.11
+        version: 0.15.11
+      prettier:
+        specifier: ^2.7.1
+        version: 2.7.1
+      rollup:
+        specifier: ^3.2.2
+        version: 3.2.2
+      ts-essentials:
+        specifier: ^9.3.0
+        version: 9.3.0(typescript@4.8.4)
+      tsup:
+        specifier: ^6.3.0
+        version: 6.3.0(typescript@4.8.4)
+      typescript:
+        specifier: ^4.8.4
+        version: 4.8.4
+      vitest:
+        specifier: ^0.34.4
+        version: 0.34.4
+      vue:
+        specifier: ^3.2.41
+        version: 3.2.41
+
+  example:
+    dependencies:
+      lodash:
+        specifier: ^4.17.21
+        version: 4.17.21
+      react:
+        specifier: ^18.2.0
+        version: 18.2.0
+      three:
+        specifier: ^0.145.0
+        version: 0.145.0
+    devDependencies:
+      '@rollup/plugin-commonjs':
+        specifier: ^23.0.0
+        version: 23.0.0(rollup@3.2.2)
+      '@rollup/plugin-node-resolve':
+        specifier: ^15.0.0
+        version: 15.0.0(rollup@3.2.2)
 
 packages:
 
@@ -607,11 +610,6 @@ packages:
   /binary-extensions@2.2.0:
     resolution: {integrity: sha512-jDctJ/IVQbZoJykoeHbhXpOlNBqGNcwXJKJog42E5HDPUwQTSdjCHdihjj0DlnheQ7blbT6dHOafNAiS8ooQKA==}
     engines: {node: '>=8'}
-    dev: true
-
-  /binaryextensions@4.18.0:
-    resolution: {integrity: sha512-PQu3Kyv9dM4FnwB7XGj1+HucW+ShvJzJqjuw1JkKVs1mWdwOKVcRjOi+pV9X52A0tNvrPCsPkbFFQb+wE1EAXw==}
-    engines: {node: '>=0.8'}
     dev: true
 
   /brace-expansion@1.1.11:
@@ -1182,21 +1180,13 @@ packages:
     resolution: {integrity: sha512-RHxMLp9lnKHGHRng9QFhRCMbYAcVpn69smSGcq3f36xjgVVWThj4qqLbTLlq7Ssj8B+fIQ1EuCEGI2lKsyQeIw==}
     dev: true
 
-  /istextorbinary@6.0.0:
-    resolution: {integrity: sha512-4j3UqQCa06GAf6QHlN3giz2EeFU7qc6Q5uB/aY7Gmb3xmLDLepDOtsZqkb4sCfJgFvTbLUinNw0kHgHs8XOHoQ==}
-    engines: {node: '>=10'}
-    dependencies:
-      binaryextensions: 4.18.0
-      textextensions: 5.15.0
-    dev: true
-
   /joycon@3.1.1:
     resolution: {integrity: sha512-34wB/Y7MW7bzjKRjUKTa46I2Z7eV62Rkhva+KkopW7Qvv/OSWBqvkSY7vusOPrNuZcUG3tApvdVgNB8POj3SPw==}
     engines: {node: '>=10'}
 
   /js-tokens@4.0.0:
     resolution: {integrity: sha512-RdJUflcE3cUzKiMqQgsCu06FPu9UdIJO0beYbPhHN4k6apgJtifcoCtT9bcxOpYBtpD2kCM6Sbzg4CausW/PKQ==}
-    dev: true
+    dev: false
 
   /jsonc-parser@3.2.0:
     resolution: {integrity: sha512-gfFQZrcTc8CnKXp6Y4/CBT3fTc0OVuDofpre4aEeEpSBPV5X5v4+Vmx+8snU7RLPrNHPKSgLxGo9YuQzz20o+w==}
@@ -1226,14 +1216,14 @@ packages:
 
   /lodash@4.17.21:
     resolution: {integrity: sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==}
-    dev: true
+    dev: false
 
   /loose-envify@1.4.0:
     resolution: {integrity: sha512-lyuxPGr/Wfhrlem2CL/UcnUc1zcqKAImBDzukY7Y5F/yQiNdko6+fRLevlw1HgMySw7f611UIY408EtxRSoK3Q==}
     hasBin: true
     dependencies:
       js-tokens: 4.0.0
-    dev: true
+    dev: false
 
   /loupe@2.3.6:
     resolution: {integrity: sha512-RaPMZKiMy8/JruncMU5Bt6na1eftNoo++R4Y+N2FrxkDVTrGvcyzFTsaGif4QTeKESheMGegbhw6iUAq+5A8zA==}
@@ -1480,7 +1470,7 @@ packages:
     engines: {node: '>=0.10.0'}
     dependencies:
       loose-envify: 1.4.0
-    dev: true
+    dev: false
 
   /readdirp@3.6.0:
     resolution: {integrity: sha512-hOS089on8RduqdbhvQ5Z37A0ESjsqz6qnRcffsMU3495FuTdqSm+7bhJ29JvIOsBDEEnan5DPu9t3To9VRlMzA==}
@@ -1620,11 +1610,6 @@ packages:
     engines: {node: '>= 0.4'}
     dev: true
 
-  /textextensions@5.15.0:
-    resolution: {integrity: sha512-MeqZRHLuaGamUXGuVn2ivtU3LA3mLCCIO5kUGoohTCoGmCBg/+8yPhWVX9WSl9telvVd8erftjFk9Fwb2dD6rw==}
-    engines: {node: '>=0.8'}
-    dev: true
-
   /thenify-all@1.6.0:
     resolution: {integrity: sha512-RNxQH/qI8/t3thXJDwcstUO4zeqo64+Uy/+sNVRBx4Xn2OX+OZ9oP+iJnNFqplFra2ZUVeKCSa2oVWi3T4uVmA==}
     engines: {node: '>=0.8'}
@@ -1640,7 +1625,7 @@ packages:
 
   /three@0.145.0:
     resolution: {integrity: sha512-EKoHQEtEJ4CB6b2BGMBgLZrfwLjXcSUfoI/MiIXUuRpeYsfK5aPWbYhdtIVWOH+x6X0TouldHKHBuc/LAiFzAw==}
-    dev: true
+    dev: false
 
   /tinybench@2.5.1:
     resolution: {integrity: sha512-65NKvSuAVDP/n4CqH+a9w2kTlLReS9vhsAP06MWx+/89nMinJyB2icyl58RIcqCmIggpojIGeuJGhjU1aGMBSg==}
