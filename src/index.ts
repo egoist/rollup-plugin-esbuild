@@ -1,7 +1,6 @@
 import { existsSync, statSync } from 'fs'
 import { extname, resolve, dirname, join } from 'path'
 import { Plugin as RollupPlugin } from 'rollup'
-import { readFile } from 'fs/promises'
 import { transform, Loader, TransformOptions } from 'esbuild'
 import { MarkOptional } from 'ts-essentials'
 import { createFilter, FilterPattern } from '@rollup/pluginutils'
