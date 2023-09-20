@@ -1,11 +1,11 @@
 import { existsSync, statSync } from 'fs'
 import { extname, resolve, dirname, join } from 'path'
 import { Plugin as RollupPlugin } from 'rollup'
+import { readFile } from 'fs/promises'
 import { transform, Loader, TransformOptions } from 'esbuild'
 import { MarkOptional } from 'ts-essentials'
 import { createFilter, FilterPattern } from '@rollup/pluginutils'
 import createDebug from 'debug'
-import { getOptions } from './options'
 import { minify, getRenderChunk } from './minify'
 import { warn } from './warn'
 import {
@@ -13,6 +13,7 @@ import {
   OptimizeDepsOptions,
   OptimizeDepsResult,
 } from './optimizer/optmize-deps'
+import { getTsconfig } from './tsconfig'
 
 export { minify }
 
@@ -25,10 +26,7 @@ const defaultLoaders: { [ext: string]: Loader } = {
   '.tsx': 'tsx',
 }
 
-export type Options = Omit<
-  TransformOptions,
-  'sourcemap' | 'loader' | 'tsconfigRaw'
-> & {
+export type Options = Omit<TransformOptions, 'sourcemap' | 'loader'> & {
   include?: FilterPattern
   exclude?: FilterPattern
   sourceMap?: boolean
@@ -152,19 +150,17 @@ export default ({
         return null
       }
 
-      const defaultOptions =
-        tsconfig === false ? {} : await getOptions(dirname(id), tsconfig)
+      const tsconfigRaw =
+        tsconfig === false
+          ? undefined
+          : await getTsconfig(dirname(id), tsconfig)
 
       const result = await transform(code, {
         loader,
-        target: defaultOptions.target || 'es2017',
-        jsxFactory: defaultOptions.jsxFactory,
-        jsxFragment: defaultOptions.jsxFragment,
-        jsx: defaultOptions.jsx,
-        // Compat: passing this option in older esbuild version will result in error
-        ...(defaultOptions.jsxDev ? { jsxDev: true } : {}),
         sourcemap: sourceMap,
         sourcefile: id,
+        tsconfigRaw,
+        target: 'es2020',
         ...esbuildOptions,
       })
 
