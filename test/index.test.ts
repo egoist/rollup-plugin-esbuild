@@ -89,9 +89,7 @@ describe('esbuild plugin', () => {
     expect(output[0].code).toMatchInlineSnapshot(`
       "class Foo {
         render() {
-          return /* @__PURE__ */ React.createElement(\\"div\\", {
-            className: \\"hehe\\"
-          }, \\"hello there!!!\\");
+          return /* @__PURE__ */ React.createElement(\\"div\\", { className: \\"hehe\\" }, \\"hello there!!!\\");
         }
       }
 
@@ -155,7 +153,7 @@ describe('esbuild plugin', () => {
     })
     expect(eval(output[0].code).name).toBe('Foo')
     expect(output[0].code).toMatchInlineSnapshot(`
-      "\\"use strict\\";var o=Object.defineProperty;var a=(e,r)=>o(e,\\"name\\",{value:r,configurable:!0});var s=Object.defineProperty,c=a((e,r)=>s(e,\\"name\\",{value:r,configurable:!0}),\\"e\\");class t{}a(t,\\"l\\"),c(t,\\"Foo\\"),module.exports=t;
+      "\\"use strict\\";var c=Object.defineProperty;var r=(e,a)=>c(e,\\"name\\",{value:a,configurable:!0});var o=Object.defineProperty,s=r((e,a)=>o(e,\\"name\\",{value:a,configurable:!0}),\\"l\\");const t=class{static{r(this,\\"e\\")}};s(t,\\"Foo\\");let l=t;module.exports=l;
       "
     `)
   })
@@ -290,9 +288,7 @@ describe('esbuild plugin', () => {
     expect(output[0].code).toMatchInlineSnapshot(`
       "class Foo {
         render() {
-          return /* @__PURE__ */ React.createElement(\\"div\\", {
-            className: \\"hehe\\"
-          }, \\"hello there!!!\\");
+          return /* @__PURE__ */ React.createElement(\\"div\\", { className: \\"hehe\\" }, \\"hello there!!!\\");
         }
       }
 
@@ -330,9 +326,7 @@ describe('esbuild plugin', () => {
 
       class Foo {
         render() {
-          return /* @__PURE__ */ React.createElement(\\"div\\", {
-            className: \\"hehe\\"
-          }, \\"hello there!!!\\", util);
+          return /* @__PURE__ */ React.createElement(\\"div\\", { className: \\"hehe\\" }, \\"hello there!!!\\", util);
         }
       }
 
@@ -459,9 +453,7 @@ describe('esbuild plugin', () => {
     expect(output[0].code).toMatchInlineSnapshot(`
       "import { jsx } from 'react/jsx-runtime';
 
-      const foo = /* @__PURE__ */ jsx(\\"div\\", {
-        children: \\"foo\\"
-      });
+      const foo = /* @__PURE__ */ jsx(\\"div\\", { children: \\"foo\\" });
 
       export { foo };
       "

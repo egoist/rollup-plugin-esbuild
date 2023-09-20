@@ -26,7 +26,7 @@ export const optimizeDeps = async (
   const cacheDir = path.join(options.cwd, 'node_modules/.optimize_deps')
   await fs.promises.mkdir(cacheDir, { recursive: true })
   await esModuleLexer.init
-  const result = await build({
+  await build({
     entryPoints: options.include,
     absWorkingDir: options.cwd,
     bundle: true,
