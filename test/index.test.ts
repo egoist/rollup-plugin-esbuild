@@ -362,18 +362,19 @@ describe('esbuild plugin', () => {
       ],
     })
     // Following code is expected
-    // esbuild doesn't emit json code as es module for now
-    // So you will need @rollup/plugin-commonjs
     expect(output[0].code).toMatchInlineSnapshot(`
-      "module.exports = {
-        foo: true
+      "var foo = true;
+      var foo_default = {
+        foo
       };
 
-      var foo = /*#__PURE__*/Object.freeze({
-            __proto__: null
+      var foo$1 = /*#__PURE__*/Object.freeze({
+            __proto__: null,
+            default: foo_default,
+            foo: foo
       });
 
-      console.log(foo);
+      console.log(foo$1);
       "
     `)
   })
