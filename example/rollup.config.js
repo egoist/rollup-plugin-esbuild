@@ -18,6 +18,10 @@ export default {
       optimizeDeps: {
         include: optimize ? ['vue', 'react', 'three', 'lodash'] : [],
       },
+      loaders: {
+        txt: 'text',
+        png: 'dataurl',
+      },
     }),
     !optimize && cjs(),
     !optimize && nodeResolve(),

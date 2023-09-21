@@ -58,8 +58,8 @@ export default ({
   }
 
   if (_loaders) {
-    for (const key of Object.keys(_loaders)) {
-      const value = _loaders[key]
+    for (let [key, value] of Object.entries(_loaders)) {
+      key = key[0] === '.' ? key : `.${key}`
       if (typeof value === 'string') {
         loaders[key] = value
       } else if (value === false) {
@@ -160,6 +160,17 @@ export default ({
         sourcefile: id,
         tsconfigRaw,
         target: 'es2020',
+        format: (
+          [
+            'base64',
+            'binary',
+            'dataurl',
+            'text',
+            'json',
+          ] satisfies Loader[] as Loader[]
+        ).includes(loader)
+          ? 'esm'
+          : undefined,
         ...esbuildOptions,
       })
 
