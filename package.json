@@ -14,7 +14,8 @@
   "repository": "https://github.com/egoist/rollup-plugin-esbuild",
   "scripts": {
     "test": "vitest",
-    "build": "rm -rf dist && tsup src/index.ts --format esm,cjs --dts-resolve",
+    "build": "tsup",
+    "dev": "tsup --watch",
     "prepublishOnly": "pnpm run build"
   },
   "files": [
