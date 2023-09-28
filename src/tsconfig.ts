@@ -1,18 +1,10 @@
-import { readFile } from 'fs/promises'
-import JoyCon from 'joycon'
+import { getTsconfig as findTsconfig, TsConfigJsonResolved } from 'get-tsconfig'
 
-const joycon = new JoyCon()
+const cache = new Map<string, unknown>()
 
-joycon.addLoader({
-  test: /\.json$/,
-  load: (file) => readFile(file, 'utf8'),
-})
-
-export const getTsconfig = async (
-  cwd: string,
-  tsconfig?: string,
-): Promise<string> => {
-  // This call is cached
-  const { data } = await joycon.load([tsconfig || 'tsconfig.json'], cwd)
-  return data
+export function getTsconfig(
+  searchPath: string,
+  configName: string,
+): TsConfigJsonResolved | undefined {
+  return findTsconfig(searchPath, configName, cache)?.config
 }

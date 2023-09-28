@@ -1,5 +1,3 @@
 {
-  "compilerOptions": {
-    "useDefineForClassFields": false
-  }
+  "extends": ["./tsconfig.base.json"]
 }

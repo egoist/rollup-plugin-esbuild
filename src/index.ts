@@ -152,7 +152,7 @@ export default ({
       const tsconfigRaw =
         tsconfig === false
           ? undefined
-          : await getTsconfig(dirname(id), tsconfig)
+          : getTsconfig(id, tsconfig || 'tsconfig.json')
 
       const result = await transform(code, {
         loader,
