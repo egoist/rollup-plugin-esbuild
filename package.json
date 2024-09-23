@@ -27,7 +27,7 @@
     "esbuild": "^0.19.4",
     "prettier": "^3.0.3",
     "react": "^18.2.0",
-    "rollup": "^4.0.2",
+    "rollup": "^4.22.4",
     "ts-essentials": "^9.4.1",
     "tsup": "^7.2.0",
     "typescript": "^5.2.2",
