@@ -38,7 +38,7 @@
     "debug": "^4.4.0",
     "es-module-lexer": "^1.6.0",
     "get-tsconfig": "^4.10.0",
-    "unplugin-utils": "^0.2.2"
+    "unplugin-utils": "^0.2.3"
   },
   "peerDependencies": {
     "esbuild": ">=0.18.0",

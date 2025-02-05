@@ -18,8 +18,8 @@ importers:
         specifier: ^4.10.0
         version: 4.10.0
       unplugin-utils:
-        specifier: ^0.2.2
-        version: 0.2.2
+        specifier: ^0.2.3
+        version: 0.2.3
     devDependencies:
       '@types/debug':
         specifier: ^4.1.12
@@ -908,8 +908,8 @@ packages:
   undici-types@6.20.0:
     resolution: {integrity: sha512-Ny6QZ2Nju20vw1SRHe3d9jVu6gJ+4e3+MMpqu7pqE5HT6WsTSlce++GQmK5UXS8mzV8DSYHrQH+Xrf2jVcuKNg==}
 
-  unplugin-utils@0.2.2:
-    resolution: {integrity: sha512-4h0AwkxZ7Xtsf6na40YwRnQe7iKyePhLYjysESsASE0OnU+U49M5sj+r1mH33LtmTJAJIJmDRlCaIvJ+g8thKQ==}
+  unplugin-utils@0.2.3:
+    resolution: {integrity: sha512-unB2e2ogZwEoMw/X0Gq1vj2jaRKLmTh9wcSEJggESPllcrZI68uO7B8ykixbXqsSwG8r9T7qaHZudXIC/3qvhw==}
     engines: {node: '>=18.12.0'}
 
   vite-node@3.0.5:
@@ -1731,7 +1731,7 @@ snapshots:
 
   undici-types@6.20.0: {}
 
-  unplugin-utils@0.2.2:
+  unplugin-utils@0.2.3:
     dependencies:
       pathe: 2.0.2
       picomatch: 4.0.2
