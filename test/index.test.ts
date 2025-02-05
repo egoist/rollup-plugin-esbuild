@@ -91,7 +91,7 @@ describe('esbuild plugin', () => {
     expect(output[0].code).toMatchInlineSnapshot(`
       "class Foo {
         render() {
-          return /* @__PURE__ */ React.createElement(\\"div\\", { className: \\"hehe\\" }, \\"hello there!!!\\");
+          return /* @__PURE__ */ React.createElement("div", { className: "hehe" }, "hello there!!!");
         }
       }
 
@@ -120,7 +120,7 @@ describe('esbuild plugin', () => {
       rollupPlugins: [esbuild({ minify: true })],
     })
     expect(output[0].code).toMatchInlineSnapshot(`
-      "class e{render(){return React.createElement(\\"div\\",{className:\\"hehe\\"},\\"hello there!!!\\")}}console.log(e);
+      "class e{render(){return React.createElement("div",{className:"hehe"},"hello there!!!")}}console.log(e);
       "
     `)
   })
@@ -137,7 +137,7 @@ describe('esbuild plugin', () => {
       format: 'esm',
     })
     expect(output[0].code).toMatchInlineSnapshot(`
-      "console.log(\\"π\\");
+      "console.log("π");
       "
     `)
   })
@@ -155,7 +155,7 @@ describe('esbuild plugin', () => {
     })
     expect(eval(output[0].code).name).toBe('Foo')
     expect(output[0].code).toMatchInlineSnapshot(`
-      "\\"use strict\\";var c=Object.defineProperty;var r=(e,a)=>c(e,\\"name\\",{value:a,configurable:!0});var o=Object.defineProperty,s=r((e,a)=>o(e,\\"name\\",{value:a,configurable:!0}),\\"l\\");const t=class{static{r(this,\\"e\\")}};s(t,\\"Foo\\");let l=t;module.exports=l;
+      ""use strict";var c=Object.defineProperty;var t=(e,r)=>c(e,"name",{value:r,configurable:!0});var o=Object.defineProperty,s=t((e,r)=>o(e,"name",{value:r,configurable:!0}),"l");const a=class{static{t(this,"e")}};s(a,"Foo");let l=a;module.exports=l;
       "
     `)
   })
@@ -206,7 +206,7 @@ describe('esbuild plugin', () => {
       format: 'commonjs',
     })
     expect(output[0].code).toMatchInlineSnapshot(`
-      "\\"use strict\\";const e=!0;console.log(!0),exports.minifyMe=!0;
+      ""use strict";const e=!0;console.log(!0),exports.minifyMe=!0;
       "
     `)
   })
@@ -224,7 +224,7 @@ describe('esbuild plugin', () => {
       format: 'iife',
     })
     expect(output[0].code).toMatchInlineSnapshot(`
-      "(function(){\\"use strict\\";console.log(!0)})();
+      "(function(){"use strict";console.log(!0)})();
       "
     `)
   })
@@ -242,7 +242,7 @@ describe('esbuild plugin', () => {
       format: 'umd',
     })
     expect(output[0].code).toMatchInlineSnapshot(`
-      "(function(n){typeof define==\\"function\\"&&define.amd?define(n):n()})(function(){\\"use strict\\";console.log(!0)});
+      "(function(e){typeof define=="function"&&define.amd?define(e):e()})(function(){"use strict";console.log(!0)});
       "
     `)
   })
@@ -290,7 +290,7 @@ describe('esbuild plugin', () => {
     expect(output[0].code).toMatchInlineSnapshot(`
       "class Foo {
         render() {
-          return /* @__PURE__ */ React.createElement(\\"div\\", { className: \\"hehe\\" }, \\"hello there!!!\\");
+          return /* @__PURE__ */ React.createElement("div", { className: "hehe" }, "hello there!!!");
         }
       }
 
@@ -328,7 +328,7 @@ describe('esbuild plugin', () => {
 
       class Foo {
         render() {
-          return /* @__PURE__ */ React.createElement(\\"div\\", { className: \\"hehe\\" }, \\"hello there!!!\\", util);
+          return /* @__PURE__ */ React.createElement("div", { className: "hehe" }, "hello there!!!", util);
         }
       }
 
@@ -399,7 +399,7 @@ describe('esbuild plugin', () => {
       rollupPlugins: [esbuild({})],
     })
     expect(output[0].code).toMatchInlineSnapshot(`
-      "const foo = /* @__PURE__ */ h(\\"div\\", null, \\"foo\\");
+      "const foo = /* @__PURE__ */ h("div", null, "foo");
 
       export { foo };
       "
@@ -426,7 +426,7 @@ describe('esbuild plugin', () => {
       rollupPlugins: [esbuild({})],
     })
     expect(output[0].code).toMatchInlineSnapshot(`
-      "const foo = /* @__PURE__ */ React.createElement(\\"div\\", null, \\"foo\\");
+      "const foo = /* @__PURE__ */ React.createElement("div", null, "foo");
 
       export { foo };
       "
@@ -456,7 +456,7 @@ describe('esbuild plugin', () => {
     expect(output[0].code).toMatchInlineSnapshot(`
       "import { jsx } from 'react/jsx-runtime';
 
-      const foo = /* @__PURE__ */ jsx(\\"div\\", { children: \\"foo\\" });
+      const foo = /* @__PURE__ */ jsx("div", { children: "foo" });
 
       export { foo };
       "
@@ -490,7 +490,7 @@ describe('esbuild plugin', () => {
       rollupPlugins: [esbuild({ tsconfig: 'tsconfig.build.json' })],
     })
     expect(output[0].code).toMatchInlineSnapshot(`
-      "const foo = /* @__PURE__ */ custom(\\"div\\", null, \\"foo\\");
+      "const foo = /* @__PURE__ */ custom("div", null, "foo");
 
       export { foo };
       "
@@ -579,7 +579,7 @@ describe('minify plugin', () => {
       format: 'commonjs',
     })
     expect(output[0].code).toMatchInlineSnapshot(`
-      "\\"use strict\\";const e=!0;console.log(!0);
+      ""use strict";const e=!0;console.log(!0);
       "
     `)
   })
@@ -597,7 +597,7 @@ describe('minify plugin', () => {
       rollupPlugins: [minify({ target: 'chrome58' })],
     })
     expect(output[0].code).toMatchInlineSnapshot(`
-      "const o=!!\\"\\".toString,n=o!=null?o:2;console.log(n);
+      "const o=!!"".toString,n=o!=null?o:2;console.log(n);
       "
     `)
   })

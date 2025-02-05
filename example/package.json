@@ -7,10 +7,10 @@
   },
   "dependencies": {
     "lodash": "^4.17.21",
-    "three": "^0.157.0"
+    "three": "^0.173.0"
   },
   "devDependencies": {
-    "@rollup/plugin-commonjs": "^25.0.5",
-    "@rollup/plugin-node-resolve": "^15.2.2"
+    "@rollup/plugin-commonjs": "^28.0.2",
+    "@rollup/plugin-node-resolve": "^16.0.0"
   }
 }
