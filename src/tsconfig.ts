@@ -1,4 +1,7 @@
-import { getTsconfig as findTsconfig, TsConfigJsonResolved } from 'get-tsconfig'
+import {
+  getTsconfig as findTsconfig,
+  type TsConfigJsonResolved,
+} from 'get-tsconfig'
 
 const cache = new Map<string, unknown>()
 

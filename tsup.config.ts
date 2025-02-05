@@ -5,4 +5,5 @@ export default defineConfig({
   format: ['esm', 'cjs'],
   dts: { resolve: true },
   clean: true,
+  target: 'es2018',
 })

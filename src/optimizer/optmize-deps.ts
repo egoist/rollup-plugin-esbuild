@@ -1,6 +1,6 @@
 import fs from 'fs'
 import path from 'path'
-import { build, BuildOptions as EsbuildOptions } from 'esbuild'
+import { build, type BuildOptions as EsbuildOptions } from 'esbuild'
 import * as esModuleLexer from 'es-module-lexer'
 
 export type OptimizeDepsOptions = {

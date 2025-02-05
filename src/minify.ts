@@ -1,5 +1,5 @@
-import { Plugin, InternalModuleFormat } from 'rollup'
-import { transform, TransformOptions, Format } from 'esbuild'
+import type { Plugin, InternalModuleFormat } from 'rollup'
+import { transform, type TransformOptions, type Format } from 'esbuild'
 import { warn } from './warn'
 
 const getEsbuildFormat = (

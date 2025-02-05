@@ -1,16 +1,16 @@
 import { existsSync, statSync } from 'fs'
 import { extname, resolve, dirname, join } from 'path'
-import { Plugin as RollupPlugin } from 'rollup'
-import { transform, Loader, TransformOptions } from 'esbuild'
-import { MarkOptional } from 'ts-essentials'
-import { createFilter, FilterPattern } from 'unplugin-utils'
+import type { Plugin as RollupPlugin } from 'rollup'
+import { transform, type Loader, type TransformOptions } from 'esbuild'
+import type { MarkOptional } from 'ts-essentials'
+import { createFilter, type FilterPattern } from 'unplugin-utils'
 import createDebug from 'debug'
 import { minify, getRenderChunk } from './minify'
 import { warn } from './warn'
 import {
   optimizeDeps as doOptimizeDeps,
-  OptimizeDepsOptions,
-  OptimizeDepsResult,
+  type OptimizeDepsOptions,
+  type OptimizeDepsResult,
 } from './optimizer/optmize-deps'
 import { getTsconfig } from './tsconfig'
 
