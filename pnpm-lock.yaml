@@ -8,9 +8,6 @@ importers:
 
   .:
     dependencies:
-      '@rollup/pluginutils':
-        specifier: ^5.1.4
-        version: 5.1.4(rollup@4.34.4)
       debug:
         specifier: ^4.4.0
         version: 4.4.0
@@ -20,6 +17,9 @@ importers:
       get-tsconfig:
         specifier: ^4.10.0
         version: 4.10.0
+      unplugin-utils:
+        specifier: ^0.2.2
+        version: 0.2.2
     devDependencies:
       '@types/debug':
         specifier: ^4.1.12
@@ -908,6 +908,10 @@ packages:
   undici-types@6.20.0:
     resolution: {integrity: sha512-Ny6QZ2Nju20vw1SRHe3d9jVu6gJ+4e3+MMpqu7pqE5HT6WsTSlce++GQmK5UXS8mzV8DSYHrQH+Xrf2jVcuKNg==}
 
+  unplugin-utils@0.2.2:
+    resolution: {integrity: sha512-4h0AwkxZ7Xtsf6na40YwRnQe7iKyePhLYjysESsASE0OnU+U49M5sj+r1mH33LtmTJAJIJmDRlCaIvJ+g8thKQ==}
+    engines: {node: '>=18.12.0'}
+
   vite-node@3.0.5:
     resolution: {integrity: sha512-02JEJl7SbtwSDJdYS537nU6l+ktdvcREfLksk/NDAqtdKWGqHl+joXzEubHROmS3E6pip+Xgu2tFezMu75jH7A==}
     engines: {node: ^18.0.0 || ^20.0.0 || >=22.0.0}
@@ -1726,6 +1730,11 @@ snapshots:
   typescript@5.7.3: {}
 
   undici-types@6.20.0: {}
+
+  unplugin-utils@0.2.2:
+    dependencies:
+      pathe: 2.0.2
+      picomatch: 4.0.2
 
   vite-node@3.0.5(@types/node@22.13.1):
     dependencies:
