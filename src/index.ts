@@ -19,12 +19,8 @@ export { minify }
 const debugOptimizeDeps = createDebug('rpe:optimize-deps')
 
 const defaultLoaders: { [ext: string]: Loader } = {
-  '.cjs': 'js',
-  '.cts': 'ts',
   '.js': 'js',
   '.jsx': 'jsx',
-  '.mjs': 'js',
-  '.mts': 'ts',
   '.ts': 'ts',
   '.tsx': 'tsx',
 }
